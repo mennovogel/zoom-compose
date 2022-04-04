@@ -77,7 +77,6 @@ fun Zoomable(
                         val futureScale = if (zoom.scale >= maxZoom - 0.1f) minZoom else maxZoom
 
                         val translationX = Calculator.calculateFutureTranslation(
-                            size.width,
                             futureScale,
                             it.x,
                             zoom.offset.x,
@@ -85,7 +84,6 @@ fun Zoomable(
                             zoom.scale
                         )
                         val translationY = Calculator.calculateFutureTranslation(
-                            size.height,
                             futureScale,
                             it.y,
                             zoom.offset.y,
@@ -111,8 +109,8 @@ fun Zoomable(
                                         -(translationY / futureScale)
                                     )
                                 )
-                            ) {
-                                zoom = it
+                            ) { newZoom ->
+                                zoom = newZoom
                             }
                         }
                     }
