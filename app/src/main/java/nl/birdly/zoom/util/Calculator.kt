@@ -6,10 +6,9 @@ import kotlin.math.min
 object Calculator {
 
     fun calculateMaxTranslation(
-            scale: Float,
-            imageSize: Int,
-            imageViewSize: Int
-    ) = max(0f, scale * imageSize - imageViewSize)
+        scale: Float,
+        imageSize: Int
+    ) = max(0f, scale * imageSize - imageSize)
 
     fun calculateOverEdgeTranslationRange(
             translationRange: ClosedFloatingPointRange<Float>,
@@ -22,16 +21,12 @@ object Calculator {
      *
      * @param futureScale The scale we want to animate to
      * @param touchPoint The x or y value of the double tap.
-     * @param currentTranslation The current translation (x or y) value of the image view.
      * @param currentViewSize The current image view size (width or height).
-     * @param currentViewScale The current image view scale (x or y).
      */
     fun calculateFutureTranslation(
         futureScale: Float,
         touchPoint: Float,
-        currentTranslation: Float,
-        currentViewSize: Int,
-        currentViewScale: Float
+        currentViewSize: Int
     ): Float {
         /**
          * The maximum and minimum translation the ImageView should have (with the futureScale),
@@ -39,7 +34,6 @@ object Calculator {
          */
         val translationRange = calculateMaxTranslation(
             futureScale,
-            currentViewSize,
             currentViewSize
         ).let {
             -it..0f
@@ -54,17 +48,6 @@ object Calculator {
             currentViewSize
         )
 
-        // The maximum translation at this moment.
-        val currentMaxTranslation = (currentViewScale - 1) / 2 * currentViewSize
-
-        /**
-         * Calculate the [touchPoint] back to how it would be if the scale was 1.0,
-         * so it is relative to the image view size.
-         */
-        val touchPointRelativeToImageView
-                = ((-currentTranslation) + currentMaxTranslation + touchPoint) / currentViewScale
-
-
         /**
          * Now that we have the touchPointRelativeToImageView, we can calculate what this
          * would be with within the new translation values.
@@ -77,7 +60,7 @@ object Calculator {
          * not 0, but somewhere lower then that.
          */
         val uncorrectedResult = -(
-                (touchPointRelativeToImageView / currentViewSize) *
+                (touchPoint / currentViewSize) *
                         (overEdgeTranslationRange.endInclusive - overEdgeTranslationRange.start)
                         - overEdgeTranslationRange.endInclusive
                 )

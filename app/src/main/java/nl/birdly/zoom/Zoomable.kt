@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import nl.birdly.zoom.ui.theme.ZoomTheme
@@ -79,23 +80,24 @@ fun Zoomable(
                         val translationX = Calculator.calculateFutureTranslation(
                             futureScale,
                             it.x,
-                            zoom.offset.x,
-                            size.width,
-                            zoom.scale
+                            size.width
                         )
                         val translationY = Calculator.calculateFutureTranslation(
                             futureScale,
                             it.y,
-                            zoom.offset.y,
-                            size.height,
-                            zoom.scale
+                            size.height
                         )
 
                         Log.d("Menno", "Zoomable: futureScale: $futureScale")
                         Log.d("Menno", "Zoomable: touchX: ${it.x}, touchY: ${it.y}")
-                        Log.d("Menno", "Zoomable: translationX: $translationX, translationY: $translationY")
-                        Log.d("Menno", "Zoomable: panX: ${translationX - size.width}, panY: " +
-                                "${translationY - size.height}")
+                        Log.d(
+                            "Menno",
+                            "Zoomable: translationX: $translationX, translationY: $translationY"
+                        )
+                        Log.d(
+                            "Menno", "Zoomable: panX: ${translationX - size.width}, panY: " +
+                                    "${translationY - size.height}"
+                        )
 
 
                         scope.launch {
@@ -104,11 +106,14 @@ fun Zoomable(
                                 Zoom(
                                     futureScale,
                                     zoom.angle,
+                                    // TODO: Offset is not used, remove
                                     Offset(
                                         -(translationX / futureScale),
                                         -(translationY / futureScale)
                                     )
-                                )
+                                ),
+                                it,
+                                size
                             ) { newZoom ->
                                 zoom = newZoom
                             }
@@ -140,6 +145,8 @@ fun Zoomable(
 suspend fun TransformableState.animateZoomBy(
     previousZoom: Zoom,
     zoom: Zoom,
+    touchPoint: Offset,
+    size: IntSize,
     zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessLow),
     onZoomUpdated: (Zoom) -> Unit
 ) {
@@ -151,11 +158,28 @@ suspend fun TransformableState.animateZoomBy(
     var currentZoom = previousZoom.copy()
     transform {
         AnimationState(initialValue = 0f).animateTo(1f, zoomAnimationSpec) {
+            val newScale = previousZoom.scale + this.value * (zoom.scale - previousZoom.scale)
+            val translationX = Calculator.calculateFutureTranslation(
+                newScale,
+                touchPoint.x,
+                size.width
+            )
+            val translationY = Calculator.calculateFutureTranslation(
+                newScale,
+                touchPoint.y,
+                size.height
+            )
+            Log.d("Menno", "animateZoomBy: value=${this.value}, " +
+                    "translationX=${translationX}, " +
+                    "newScale=${newScale}, " +
+                    "touchPoint=${touchPoint.x}, " +
+                    "size=${size.width}, " +
+                    "x=${-(translationX / newScale)}")
             currentZoom = currentZoom.copy(
-                scale = previousZoom.scale + this.value * (zoom.scale - previousZoom.scale),
+                scale = newScale,
                 offset = Offset(
-                    x = previousZoom.offset.x + this.value * (zoom.offset.x - previousZoom.offset.x),
-                    y = previousZoom.offset.y + this.value * (zoom.offset.y - previousZoom.offset.y)
+                    x = - (translationX / newScale),
+                    y = - (translationY / newScale)
                 )
             )
             onZoomUpdated(currentZoom)

@@ -10,7 +10,6 @@ class CalculatorTest {
     fun testCalculateMaxTranslation_withoutZoom_isCorrect() {
         val result: Float = Calculator.calculateMaxTranslation(
             1f,
-            100,
             100
         )
         assertEquals(0f, result)
@@ -20,7 +19,6 @@ class CalculatorTest {
     fun testCalculateMaxTranslation_withDoubleZoom_isCorrect() {
         val result: Float = Calculator.calculateMaxTranslation(
             2f,
-            100,
             100
         )
         assertEquals(100f, result)
@@ -30,7 +28,6 @@ class CalculatorTest {
     fun testCalculateMaxTranslation_withTripleZoom_isCorrect() {
         val result: Float = Calculator.calculateMaxTranslation(
             3f,
-            100,
             100
         )
         assertEquals(200f, result)
@@ -59,11 +56,49 @@ class CalculatorTest {
         val result = Calculator.calculateFutureTranslation(
             2f,
             50f,
-            0f,
-            100,
-            1f
+            100
         )
         assertEquals(-50f, result)
+    }
+
+    @Test
+    fun testCalculateFutureTranslation_inCenterZoomOut_returnsCenterTranslation() {
+        val result = Calculator.calculateFutureTranslation(
+            1f,
+            50f,
+            100
+        )
+        assertEquals(0f, abs(result))
+    }
+
+    @Test
+    fun testCalculateFutureTranslation_inRightEdgeZoomOut_returnsCenterTranslation() {
+        val result = Calculator.calculateFutureTranslation(
+            1.5f,
+            100f,
+            100
+        )
+        assertEquals(-50f, result)
+    }
+
+    @Test
+    fun testCalculateTranslation_inRightEdgeZoomInToZoomIn_keepsSameTranslation() {
+        val result = Calculator.calculateFutureTranslation(
+            2f,
+            1080f,
+            1080
+        )
+        assertEquals(-1080f, result)
+    }
+
+    @Test
+    fun testCalculateTranslation_inCenterZoomInToZoomIn_keepsSameTranslation() {
+        val result = Calculator.calculateFutureTranslation(
+            2f,
+            540f,
+            1080
+        )
+        assertEquals(-540f, result)
     }
 
     @Test
@@ -71,9 +106,7 @@ class CalculatorTest {
         val result = Calculator.calculateFutureTranslation(
             2f,
             40f,
-            0f,
-            100,
-            1f
+            100
         )
         // Use abs, because it doesn't matter if it's -0 or 0.
         assertEquals(-30f, result)
@@ -84,9 +117,7 @@ class CalculatorTest {
         val result = Calculator.calculateFutureTranslation(
             2f,
             0f,
-            0f,
-            100,
-            1f
+            100
         )
         // Results in 50
         assertEquals(0f, result)
@@ -97,9 +128,7 @@ class CalculatorTest {
         val result = Calculator.calculateFutureTranslation(
             2f,
             10f, // 10 should still be enough to zoom the the edge
-            0f,
-            100,
-            1f
+            100
         )
         // Results in -50
         assertEquals(0f, result)
@@ -110,9 +139,7 @@ class CalculatorTest {
         val result = Calculator.calculateFutureTranslation(
             2f,
             25f,
-            0f,
-            100,
-            1f
+            100
         )
         assertEquals(0f, abs(result))
     }
