@@ -77,41 +77,13 @@ fun Zoomable(
                     onDoubleTap = {
                         val futureScale = if (zoom.scale >= maxZoom - 0.1f) minZoom else maxZoom
 
-                        val translationX = Calculator.calculateFutureTranslation(
-                            futureScale,
-                            it.x,
-                            size.width
-                        )
-                        val translationY = Calculator.calculateFutureTranslation(
-                            futureScale,
-                            it.y,
-                            size.height
-                        )
-
                         Log.d("Menno", "Zoomable: futureScale: $futureScale")
                         Log.d("Menno", "Zoomable: touchX: ${it.x}, touchY: ${it.y}")
-                        Log.d(
-                            "Menno",
-                            "Zoomable: translationX: $translationX, translationY: $translationY"
-                        )
-                        Log.d(
-                            "Menno", "Zoomable: panX: ${translationX - size.width}, panY: " +
-                                    "${translationY - size.height}"
-                        )
-
 
                         scope.launch {
                             state.animateZoomBy(
                                 zoom,
-                                Zoom(
-                                    futureScale,
-                                    zoom.angle,
-                                    // TODO: Offset is not used, remove
-                                    Offset(
-                                        -(translationX / futureScale),
-                                        -(translationY / futureScale)
-                                    )
-                                ),
+                                futureScale,
                                 it,
                                 size
                             ) { newZoom ->
@@ -144,21 +116,21 @@ fun Zoomable(
 
 suspend fun TransformableState.animateZoomBy(
     previousZoom: Zoom,
-    zoom: Zoom,
+    scale: Float,
     touchPoint: Offset,
     size: IntSize,
     zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessLow),
     onZoomUpdated: (Zoom) -> Unit
 ) {
-    Log.d("Menno", "animateZoomBy: $previousZoom, $zoom")
-    require(zoom.scale > 0) {
+    Log.d("Menno", "animateZoomBy: $previousZoom, $scale")
+    require(scale > 0) {
         "scale value should be greater than 0"
     }
 
     var currentZoom = previousZoom.copy()
     transform {
         AnimationState(initialValue = 0f).animateTo(1f, zoomAnimationSpec) {
-            val newScale = previousZoom.scale + this.value * (zoom.scale - previousZoom.scale)
+            val newScale = previousZoom.scale + this.value * (scale - previousZoom.scale)
             val translationX = Calculator.calculateFutureTranslation(
                 newScale,
                 touchPoint.x,
