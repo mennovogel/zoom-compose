@@ -7,12 +7,17 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateTo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.TransformableState
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculateCentroidSize
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateRotation
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -26,7 +31,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChangeConsumed
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
@@ -34,8 +44,10 @@ import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoom.util.Calculator
+import nl.birdly.zoom.util.detectTransformGestures
 import nl.birdly.zoom.util.minMax
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -95,25 +107,31 @@ fun Zoomable(
                 )
             }
             .pointerInput(Unit) {
-                detectTransformGestures { centroid: Offset,
-                                          pan: Offset,
-                                          gestureZoom: Float,
-                                          gestureRotate: Float ->
-                    val oldScale = zoom.scale
-                    val newScale = minMax(minZoom, maxZoom, zoom.scale * gestureZoom)
-                    val newOffset = (zoom.offset + centroid / oldScale).rotateBy(gestureRotate) -
-                            (centroid / newScale + pan * zoom.scale)
-                    val newAngle = if (rotation) {
-                        zoom.angle + gestureRotate
-                    } else {
-                        zoom.angle
+                detectTransformGestures(
+                    onCondition = { pointerEvent ->
+                        pointerEvent.changes.size > 1
+                    },
+                    onGesture = { centroid: Offset,
+                                     pan: Offset,
+                                     gestureZoom: Float,
+                                     gestureRotate: Float ->
+                        val oldScale = zoom.scale
+                        val newScale = minMax(minZoom, maxZoom, zoom.scale * gestureZoom)
+                        val newOffset =
+                            (zoom.offset + centroid / oldScale).rotateBy(gestureRotate) -
+                                    (centroid / newScale + pan * zoom.scale)
+                        val newAngle = if (rotation) {
+                            zoom.angle + gestureRotate
+                        } else {
+                            zoom.angle
+                        }
+                        zoom = Zoom(
+                            newScale,
+                            newAngle,
+                            newOffset
+                        )
                     }
-                    zoom = Zoom(
-                        newScale,
-                        newAngle,
-                        newOffset
-                    )
-                }
+                )
             },
         content = { content() }
     )
