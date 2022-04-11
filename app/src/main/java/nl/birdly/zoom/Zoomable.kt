@@ -7,6 +7,7 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateTo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.TransformableState
@@ -130,31 +131,32 @@ suspend fun TransformableState.animateZoomBy(
     require(scale > 0) {
         "scale value should be greater than 0"
     }
+    val translationX = Calculator.calculateFutureTranslation(
+        scale,
+        touchPoint.x,
+        size.width
+    )
+    val translationY = Calculator.calculateFutureTranslation(
+        scale,
+        touchPoint.y,
+        size.height
+    )
 
     var currentZoom = previousZoom.copy()
     transform {
         AnimationState(initialValue = 0f).animateTo(1f, zoomAnimationSpec) {
             val newScale = previousZoom.scale + this.value * (scale - previousZoom.scale)
-            val translationX = Calculator.calculateFutureTranslation(
-                newScale,
-                touchPoint.x,
-                size.width
-            )
-            val translationY = Calculator.calculateFutureTranslation(
-                newScale,
-                touchPoint.y,
-                size.height
-            )
             Log.d("Menno", "animateZoomBy: value=${this.value}, " +
                     "translationX=${translationX}, " +
                     "newScale=${newScale}, " +
                     "touchPoint=${touchPoint.x}, " +
                     "size=${size.width}, ")
+
             currentZoom = currentZoom.copy(
                 scale = newScale,
                 offset = Offset(
-                    x = -translationX,
-                    y = -translationY
+                    x = previousZoom.offset.x * (1 - this.value) - translationX * this.value,
+                    y = previousZoom.offset.y * (1 - this.value) - translationY * this.value
                 )
             )
             onZoomUpdated(currentZoom)
