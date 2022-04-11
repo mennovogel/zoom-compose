@@ -101,7 +101,7 @@ fun Zoomable(
                     val oldScale = zoom.scale
                     val newScale = minMax(minZoom, maxZoom, zoom.scale * gestureZoom)
                     val newOffset = (zoom.offset + centroid / oldScale).rotateBy(gestureRotate) -
-                            (centroid / newScale + pan)
+                            (centroid / newScale + pan * zoom.scale)
                     val newAngle = if (rotation) {
                         zoom.angle + gestureRotate
                     } else {
@@ -149,8 +149,7 @@ suspend fun TransformableState.animateZoomBy(
                     "translationX=${translationX}, " +
                     "newScale=${newScale}, " +
                     "touchPoint=${touchPoint.x}, " +
-                    "size=${size.width}, " +
-                    "x=${-(translationX / newScale)}")
+                    "size=${size.width}, ")
             currentZoom = currentZoom.copy(
                 scale = newScale,
                 offset = Offset(
