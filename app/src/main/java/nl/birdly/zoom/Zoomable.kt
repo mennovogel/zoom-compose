@@ -66,8 +66,8 @@ fun Zoomable(
             .graphicsLayer(
                 scaleX = zoom.scale,
                 scaleY = zoom.scale,
-                translationX = -zoom.offset.x * zoom.scale,
-                translationY = -zoom.offset.y * zoom.scale,
+                translationX = -zoom.offset.x,
+                translationY = -zoom.offset.y,
                 rotationZ = zoom.angle,
                 transformOrigin = TransformOrigin(0f, 0f)
             )
@@ -107,7 +107,11 @@ fun Zoomable(
                     } else {
                         zoom.angle
                     }
-                    zoom = Zoom(newScale, newAngle, newOffset)
+                    zoom = Zoom(
+                        newScale,
+                        newAngle,
+                        newOffset
+                    )
                 }
             },
         content = { content() }
@@ -150,8 +154,8 @@ suspend fun TransformableState.animateZoomBy(
             currentZoom = currentZoom.copy(
                 scale = newScale,
                 offset = Offset(
-                    x = - (translationX / newScale),
-                    y = - (translationY / newScale)
+                    x = -translationX,
+                    y = -translationY
                 )
             )
             onZoomUpdated(currentZoom)
