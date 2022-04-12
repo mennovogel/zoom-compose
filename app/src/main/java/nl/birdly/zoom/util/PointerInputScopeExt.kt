@@ -10,6 +10,7 @@ import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.positionChangeConsumed
 import androidx.compose.ui.input.pointer.positionChanged
@@ -18,6 +19,7 @@ import kotlin.math.abs
 
 suspend fun PointerInputScope.detectTransformGestures(
     panZoomLock: Boolean = false,
+    onCanceled: () -> Unit = {},
     onCondition: (pointerEvent: PointerEvent) -> Boolean,
     onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit
 ) {
@@ -35,6 +37,9 @@ suspend fun PointerInputScope.detectTransformGestures(
                 val event: PointerEvent = awaitPointerEvent()
 
                 val canceled = event.changes.any { it.positionChangeConsumed() }
+
+                if (event.changes.size == 1 && event.changes.any { it.changedToUp() }) onCanceled()
+
                 if (!canceled && onCondition(event)) {
                     val zoomChange = event.calculateZoom()
                     val rotationChange = event.calculateRotation()

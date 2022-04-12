@@ -41,9 +41,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.zIndex
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoom.util.Calculator
+import nl.birdly.zoom.util.animateZoomBy
 import nl.birdly.zoom.util.detectTransformGestures
 import nl.birdly.zoom.util.minMax
 import kotlin.math.PI
@@ -62,6 +64,12 @@ fun Zoomable(
     zoomingZIndex: Float = 1f,
     defaultZIndex: Float = 0f,
     rotation: Boolean = false,
+    onCanceledHandler: (
+        CoroutineScope,
+        TransformableState,
+        Zoom,
+        (Zoom) -> Unit
+    ) -> Unit = ResetOnCanceledHandler(),
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -111,10 +119,15 @@ fun Zoomable(
                     onCondition = { pointerEvent ->
                         pointerEvent.changes.size > 1
                     },
+                    onCanceled = {
+                        onCanceledHandler(scope, state, zoom) {
+                            zoom = it
+                        }
+                    },
                     onGesture = { centroid: Offset,
-                                     pan: Offset,
-                                     gestureZoom: Float,
-                                     gestureRotate: Float ->
+                                  pan: Offset,
+                                  gestureZoom: Float,
+                                  gestureRotate: Float ->
                         val oldScale = zoom.scale
                         val newScale = minMax(minZoom, maxZoom, zoom.scale * gestureZoom)
                         val newOffset =
@@ -135,51 +148,6 @@ fun Zoomable(
             },
         content = { content() }
     )
-}
-
-suspend fun TransformableState.animateZoomBy(
-    previousZoom: Zoom,
-    scale: Float,
-    touchPoint: Offset,
-    size: IntSize,
-    zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessLow),
-    onZoomUpdated: (Zoom) -> Unit
-) {
-    Log.d("Menno", "animateZoomBy: $previousZoom, $scale")
-    require(scale > 0) {
-        "scale value should be greater than 0"
-    }
-    val translationX = Calculator.calculateFutureTranslation(
-        scale,
-        touchPoint.x,
-        size.width
-    )
-    val translationY = Calculator.calculateFutureTranslation(
-        scale,
-        touchPoint.y,
-        size.height
-    )
-
-    var currentZoom = previousZoom.copy()
-    transform {
-        AnimationState(initialValue = 0f).animateTo(1f, zoomAnimationSpec) {
-            val newScale = previousZoom.scale + this.value * (scale - previousZoom.scale)
-            Log.d("Menno", "animateZoomBy: value=${this.value}, " +
-                    "translationX=${translationX}, " +
-                    "newScale=${newScale}, " +
-                    "touchPoint=${touchPoint.x}, " +
-                    "size=${size.width}, ")
-
-            currentZoom = currentZoom.copy(
-                scale = newScale,
-                offset = Offset(
-                    x = previousZoom.offset.x * (1 - this.value) - translationX * this.value,
-                    y = previousZoom.offset.y * (1 - this.value) - translationY * this.value
-                )
-            )
-            onZoomUpdated(currentZoom)
-        }
-    }
 }
 
 fun Offset.rotateBy(angle: Float): Offset {
