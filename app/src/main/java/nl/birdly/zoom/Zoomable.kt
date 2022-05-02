@@ -22,6 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.CoroutineScope
+import nl.birdly.zoom.gesture.tap.OnDoubleTapHandler
+import nl.birdly.zoom.gesture.tap.TapHandler
+import nl.birdly.zoom.gesture.tap.ZoomOnDoubleTapHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoom.util.detectTransformGestures
 import nl.birdly.zoom.util.minMax
@@ -39,7 +42,7 @@ fun Zoomable(
     zoomingZIndex: Float = 1f,
     defaultZIndex: Float = 0f,
     rotation: Boolean = false,
-    onDoubleTapHandler: OnDoubleTapHandler = ZoomOnDoubleTapHandler(),
+    tapHandler: TapHandler = TapHandler(),
     onCanceledHandler: (
         CoroutineScope,
         TransformableState,
@@ -70,8 +73,7 @@ fun Zoomable(
             )
             .zIndex(if (zoom.scale > 1.0f) zoomingZIndex else defaultZIndex)
             .pointerInput(Unit) {
-                onDoubleTapHandler(
-                    scope,
+                tapHandler(scope,
                     this,
                     state,
                     zoomRange,
@@ -79,13 +81,13 @@ fun Zoomable(
                 ) { newZoom ->
                     zoom = newZoom
                 }
-                // TODO: Remove next 2 lines?
             }
             .pointerInput(Unit) {
                 detectTransformGestures(
                     onCondition = { pointerEvent ->
                         pointerEvent.changes.size > 1
                     },
+                    // TODO: This breaks double tap behavior
                     onCanceled = {
                         onCanceledHandler(scope, state, zoom) {
                             zoom = it

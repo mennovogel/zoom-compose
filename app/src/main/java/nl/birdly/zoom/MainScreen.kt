@@ -3,6 +3,7 @@ package nl.birdly.zoom
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nl.birdly.zoom.gesture.tap.TapHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
 
 @Preview
@@ -35,7 +37,14 @@ fun ImageRow(title: String, asset: String) {
         start = 16.dp, top = 24.dp, bottom = 8.dp
     ))
     val bitmap: Bitmap = LocalContext.current.assetsToBitmap(asset)
-    Zoomable {
+    Zoomable(
+        tapHandler = TapHandler(
+            onDoubleTap = null,
+            onTap = {
+                Log.d("Menno", "tap!")
+            }
+        )
+    ) {
         Image(bitmap.asImageBitmap(), contentDescription = title)
     }
 }
