@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import nl.birdly.zoom.gesture.tap.TapHandler
+import nl.birdly.zoom.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
 
 @Composable
@@ -49,6 +50,9 @@ fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
             onTap = {
                 onTap(asset)
             }
+        ),
+        transformGestureHandler = TransformGestureHandler(
+            onCanceled = ResetOnCanceledHandler()
         )
     ) {
         Image(bitmap.asImageBitmap(), contentDescription = title)

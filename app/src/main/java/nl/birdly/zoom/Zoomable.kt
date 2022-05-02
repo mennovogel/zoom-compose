@@ -23,9 +23,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.CoroutineScope
-import nl.birdly.zoom.gesture.tap.OnDoubleTapHandler
 import nl.birdly.zoom.gesture.tap.TapHandler
-import nl.birdly.zoom.gesture.tap.ZoomOnDoubleTapHandler
+import nl.birdly.zoom.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoom.util.detectTransformGestures
 import nl.birdly.zoom.util.minMax
@@ -44,12 +43,7 @@ fun Zoomable(
     defaultZIndex: Float = 0f,
     rotation: Boolean = false,
     tapHandler: TapHandler = TapHandler(),
-    onCanceledHandler: (
-        CoroutineScope,
-        TransformableState,
-        Zoom,
-        (Zoom) -> Unit
-    ) -> Unit = ResetOnCanceledHandler(),
+    transformGestureHandler: TransformGestureHandler = TransformGestureHandler(),
     content: @Composable BoxScope.() -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -84,41 +78,16 @@ fun Zoomable(
                 }
             }
             .pointerInput(Unit) {
-                detectTransformGestures(
-                    onCondition = { pointerEvent ->
-                        pointerEvent.changes.size > 1
-                    },
-                    // TODO: This breaks double tap behavior
-                    onCanceled = {
-                        onCanceledHandler(scope, state, zoom) {
-                            zoom = it
-                        }
-                    },
-                    onGesture = { centroid: Offset,
-                                  pan: Offset,
-                                  gestureZoom: Float,
-                                  gestureRotate: Float ->
-                        val oldScale = zoom.scale
-                        val newScale = minMax(
-                            zoomRange.start,
-                            zoomRange.endInclusive,
-                            zoom.scale * gestureZoom
-                        )
-                        val newOffset =
-                            (zoom.offset + centroid / oldScale).rotateBy(gestureRotate) -
-                                    (centroid / newScale + pan * zoom.scale)
-                        val newAngle = if (rotation) {
-                            zoom.angle + gestureRotate
-                        } else {
-                            zoom.angle
-                        }
-                        zoom = Zoom(
-                            newScale,
-                            newAngle,
-                            newOffset
-                        )
-                    }
-                )
+                transformGestureHandler.invoke(
+                    scope,
+                    this,
+                    state,
+                    zoomRange,
+                    rotation,
+                    zoomProvider = { zoom }
+                ) { newZoom ->
+                    zoom = newZoom
+                }
             },
         content = { content() }
     )
