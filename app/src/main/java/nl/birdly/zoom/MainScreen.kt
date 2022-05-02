@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import nl.birdly.zoom.gesture.tap.TapHandler
+import nl.birdly.zoom.gesture.transform.OnDoubleTouchCondition
 import nl.birdly.zoom.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
 
@@ -52,7 +53,8 @@ fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
             }
         ),
         transformGestureHandler = TransformGestureHandler(
-            onCanceled = ResetOnCanceledHandler()
+            onCanceled = ResetOnCanceledHandler(),
+            onCondition = OnDoubleTouchCondition()
         )
     ) {
         Image(bitmap.asImageBitmap(), contentDescription = title)
