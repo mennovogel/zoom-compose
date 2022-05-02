@@ -17,22 +17,28 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import nl.birdly.zoom.gesture.tap.TapHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
 
-@Preview
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavHostController) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        ImageRow(title = "Dolphin", asset = "Dolphin.jpg")
-        ImageRow(title = "Mountains", asset = "Mountains.jpg")
-        ImageRow(title = "Shanghai", asset = "Shanghai.jpg")
-        ImageRow(title = "Sunset", asset = "Sunset.jpg")
+        val onTap = { asset: String ->
+            navController.navigate("image/$asset")
+        }
+
+        ImageRow(title = "Dolphin", asset = "Dolphin.jpg", onTap)
+        ImageRow(title = "Mountains", asset = "Mountains.jpg", onTap)
+        ImageRow(title = "Shanghai", asset = "Shanghai.jpg", onTap)
+        ImageRow(title = "Sunset", asset = "Sunset.jpg", onTap)
     }
 }
 
 @Composable
-fun ImageRow(title: String, asset: String) {
+fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
     Text(text = title, style = MaterialTheme.typography.h6, modifier = Modifier.padding(
         start = 16.dp, top = 24.dp, bottom = 8.dp
     ))
@@ -41,7 +47,7 @@ fun ImageRow(title: String, asset: String) {
         tapHandler = TapHandler(
             onDoubleTap = null,
             onTap = {
-                Log.d("Menno", "tap!")
+                onTap(asset)
             }
         )
     ) {
@@ -59,6 +65,6 @@ private fun Context.assetsToBitmap(fileName: String): Bitmap {
 @Composable
 private fun MainScreenPreview() {
     ZoomTheme {
-        MainScreen()
+        MainScreen(rememberNavController())
     }
 }

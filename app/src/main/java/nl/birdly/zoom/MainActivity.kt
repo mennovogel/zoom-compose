@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import nl.birdly.zoom.ui.theme.ZoomTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,7 +19,14 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    MainScreen()
+                    val navController = rememberNavController()
+                    
+                    NavHost(navController = navController, startDestination = "main") {
+                        composable("main") { MainScreen(navController) }
+                        composable("image/{asset}") { navBackStackEntry ->
+                            ImageScreen(navBackStackEntry.arguments?.getString("asset")!!)
+                        }
+                    }
                 }
             }
         }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +50,7 @@ fun Zoomable(
         Zoom,
         (Zoom) -> Unit
     ) -> Unit = ResetOnCanceledHandler(),
-    content: @Composable () -> Unit
+    content: @Composable BoxScope.() -> Unit
 ) {
     val scope = rememberCoroutineScope()
     var zoom: Zoom by remember { mutableStateOf(Zoom())}
