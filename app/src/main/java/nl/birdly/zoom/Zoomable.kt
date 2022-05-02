@@ -3,7 +3,6 @@ package nl.birdly.zoom
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -22,12 +21,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
-import kotlinx.coroutines.CoroutineScope
 import nl.birdly.zoom.gesture.tap.TapHandler
 import nl.birdly.zoom.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
-import nl.birdly.zoom.util.detectTransformGestures
-import nl.birdly.zoom.util.minMax
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
