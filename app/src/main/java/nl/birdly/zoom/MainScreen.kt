@@ -22,6 +22,7 @@ import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
+import nl.birdly.zoombox.Zoomable
 import nl.birdly.zoombox.gesture.transform.ResetOnCanceledHandler
 
 @Composable
@@ -44,7 +45,7 @@ fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
         start = 16.dp, top = 24.dp, bottom = 8.dp
     ))
     val bitmap: Bitmap = LocalContext.current.assetsToBitmap(asset)
-    nl.birdly.zoombox.Zoomable(
+    Zoomable(
         tapHandler = TapHandler(
             onDoubleTap = null,
             onTap = {

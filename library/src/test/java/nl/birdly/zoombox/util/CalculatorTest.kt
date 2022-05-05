@@ -8,7 +8,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateMaxTranslation_withoutZoom_isCorrect() {
-        val result: Float = nl.birdly.zoombox.util.Calculator.calculateMaxTranslation(
+        val result: Float = Calculator.calculateMaxTranslation(
             1f,
             100
         )
@@ -17,7 +17,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateMaxTranslation_withDoubleZoom_isCorrect() {
-        val result: Float = nl.birdly.zoombox.util.Calculator.calculateMaxTranslation(
+        val result: Float = Calculator.calculateMaxTranslation(
             2f,
             100
         )
@@ -26,7 +26,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateMaxTranslation_withTripleZoom_isCorrect() {
-        val result: Float = nl.birdly.zoombox.util.Calculator.calculateMaxTranslation(
+        val result: Float = Calculator.calculateMaxTranslation(
             3f,
             100
         )
@@ -35,25 +35,25 @@ class CalculatorTest {
 
     @Test
     fun testCalculateOverEdgeTranslationRange_withoutZoom_isCorrect() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateOverEdgeTranslationRange(0f..0f, 100)
+        val result = Calculator.calculateOverEdgeTranslationRange(0f..0f, 100)
         assertEquals(-50f..50f, result)
     }
 
     @Test
     fun testCalculateOverEdgeTranslationRange_withDoubleZoom_isCorrect() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateOverEdgeTranslationRange(-100f..0f, 100)
+        val result = Calculator.calculateOverEdgeTranslationRange(-100f..0f, 100)
         assertEquals(-150f..50f, result)
     }
 
     @Test
     fun testCalculateOverEdgeTranslationRange_withTripleZoom_isCorrect() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateOverEdgeTranslationRange(-200f..0f, 100)
+        val result = Calculator.calculateOverEdgeTranslationRange(-200f..0f, 100)
         assertEquals(-250f..50f, result)
     }
 
     @Test
     fun testCalculateFutureTranslation_inCenter_returnsCenterTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             2f,
             50f,
             100
@@ -63,7 +63,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateFutureTranslation_inCenterZoomOut_returnsCenterTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             1f,
             50f,
             100
@@ -73,7 +73,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateFutureTranslation_inRightEdgeZoomOut_returnsCenterTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             1.5f,
             100f,
             100
@@ -83,7 +83,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateTranslation_inRightEdgeZoomInToZoomIn_keepsSameTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             2f,
             1080f,
             1080
@@ -93,7 +93,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateTranslation_inCenterZoomInToZoomIn_keepsSameTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             2f,
             540f,
             1080
@@ -103,7 +103,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateFutureTranslation_inAlmostCenter_returnsAlmostCenterTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             2f,
             40f,
             100
@@ -114,7 +114,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateFutureTranslation_onLeftEdge_returnsLeftTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             2f,
             0f,
             100
@@ -125,7 +125,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateFutureTranslation_onLeftSide_returnsLeftTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             2f,
             10f, // 10 should still be enough to zoom the the edge
             100
@@ -136,7 +136,7 @@ class CalculatorTest {
 
     @Test
     fun testCalculateFutureTranslation_onExactLeftSide_returnsLeftTranslation() {
-        val result = nl.birdly.zoombox.util.Calculator.calculateFutureTranslation(
+        val result = Calculator.calculateFutureTranslation(
             2f,
             25f,
             100

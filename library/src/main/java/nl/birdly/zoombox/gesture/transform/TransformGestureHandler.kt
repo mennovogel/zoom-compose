@@ -5,6 +5,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
+import nl.birdly.zoombox.Zoom
 import nl.birdly.zoombox.util.detectTransformGestures
 
 class TransformGestureHandler(
@@ -12,11 +13,12 @@ class TransformGestureHandler(
     private val onCanceled: (
         CoroutineScope,
         TransformableState,
-        nl.birdly.zoombox.Zoom,
-        (nl.birdly.zoombox.Zoom) -> Unit
-    ) -> Unit = { _: CoroutineScope, _: TransformableState, _: nl.birdly.zoombox.Zoom, _: (nl.birdly.zoombox.Zoom) -> Unit -> },
+        PointerInputScope,
+        Zoom,
+        (Zoom) -> Unit
+    ) -> Unit = { _: CoroutineScope, _: TransformableState, _: PointerInputScope, _: Zoom, _: (Zoom) -> Unit -> },
     private val onCondition: (pointerEvent: PointerEvent) -> Boolean = { true },
-    private val onGesture: (Offset, ClosedFloatingPointRange<Float>, TransformableState, Offset, nl.birdly.zoombox.Zoom, Float, Float, Boolean, (nl.birdly.zoombox.Zoom) -> Unit) -> Unit
+    private val onGesture: (Offset, ClosedFloatingPointRange<Float>, TransformableState, Offset, Zoom, Float, Float, Boolean, (Zoom) -> Unit) -> Unit
     = OnPinchToZoomGestureHandler()
 ) {
 
@@ -26,14 +28,14 @@ class TransformGestureHandler(
         state: TransformableState,
         zoomRange: ClosedFloatingPointRange<Float>,
         rotation: Boolean,
-        zoomProvider: () -> nl.birdly.zoombox.Zoom,
-        onZoomUpdated: (nl.birdly.zoombox.Zoom) -> Unit
+        zoomProvider: () -> Zoom,
+        onZoomUpdated: (Zoom) -> Unit
     ) {
         pointerInputScope.detectTransformGestures(
             onCondition = onCondition,
             panZoomLock = panZoomLock,
             onCanceled = {
-                onCanceled(scope, state, zoomProvider(), onZoomUpdated)
+                onCanceled(scope, state, pointerInputScope, zoomProvider(), onZoomUpdated)
             },
             onGesture = { centroid: Offset, pan: Offset, gestureZoom: Float, gestureRotation: Float ->
                 onGesture(

@@ -13,13 +13,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
+import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
+import nl.birdly.zoombox.gesture.transform.ResetOnCanceledHandler
+import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 
 @Composable
 fun ImageScreen(asset: String) {
     val bitmap: Bitmap = LocalContext.current.assetsToBitmap(asset)
     Zoomable(
         Modifier
-            .fillMaxHeight()
+            .fillMaxHeight(),
+        transformGestureHandler = TransformGestureHandler(
+            onCanceled = ResetOnCanceledHandler(ResetOnCanceledHandler.Behavior.KeepWithinBounds),
+            onCondition = OnDoubleTouchCondition()
+        )
     ) {
         Image(
             bitmap.asImageBitmap(),
