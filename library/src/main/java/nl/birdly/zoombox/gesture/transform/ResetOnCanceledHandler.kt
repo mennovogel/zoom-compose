@@ -1,8 +1,9 @@
-package nl.birdly.zoombox
+package nl.birdly.zoombox.gesture.transform
 
 import androidx.compose.foundation.gestures.TransformableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import nl.birdly.zoombox.Zoom
 import nl.birdly.zoombox.util.animateZoomBy
 
 class ResetOnCanceledHandler : (CoroutineScope, TransformableState, Zoom, (Zoom) -> Unit) -> Unit {

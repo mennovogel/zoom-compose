@@ -22,7 +22,7 @@ import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
-import nl.birdly.zoombox.ResetOnCanceledHandler
+import nl.birdly.zoombox.gesture.transform.ResetOnCanceledHandler
 
 @Composable
 fun MainScreen(navController: NavHostController) {
