@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import nl.birdly.zoom.ui.theme.ZoomTheme
+import nl.birdly.zoombox.Zoomable
 
 @Composable
 fun ImageScreen(asset: String) {

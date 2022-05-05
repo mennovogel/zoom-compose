@@ -3,7 +3,6 @@ package nl.birdly.zoom
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -17,13 +16,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import nl.birdly.zoom.gesture.tap.TapHandler
-import nl.birdly.zoom.gesture.transform.OnDoubleTouchCondition
-import nl.birdly.zoom.gesture.transform.TransformGestureHandler
+import nl.birdly.zoombox.gesture.tap.TapHandler
+import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
+import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
+import nl.birdly.zoombox.ResetOnCanceledHandler
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -45,7 +44,7 @@ fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
         start = 16.dp, top = 24.dp, bottom = 8.dp
     ))
     val bitmap: Bitmap = LocalContext.current.assetsToBitmap(asset)
-    Zoomable(
+    nl.birdly.zoombox.Zoomable(
         tapHandler = TapHandler(
             onDoubleTap = null,
             onTap = {
