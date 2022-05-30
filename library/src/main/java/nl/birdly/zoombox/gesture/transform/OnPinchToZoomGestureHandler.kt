@@ -1,17 +1,16 @@
 package nl.birdly.zoombox.gesture.transform
 
-import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
 import nl.birdly.zoombox.Zoom
 import nl.birdly.zoombox.rotateBy
 import nl.birdly.zoombox.util.minMax
 
-class OnPinchToZoomGestureHandler : (Offset, ClosedFloatingPointRange<Float>, TransformableState, Offset, Zoom, Float, Float, Boolean, (Zoom) -> Unit) -> Unit {
+class OnPinchToZoomGestureHandler : (Offset, ClosedFloatingPointRange<Float>, Offset, Zoom, Float, Float, Boolean, (Zoom) -> Unit) -> Unit {
 
     override fun invoke(
-        centroid: Offset,
+        centroid: Offset, // The position in pixels of the centre zoom position where 0,0 is the
+        // top left corner
         zoomRange: ClosedFloatingPointRange<Float>,
-        state: TransformableState,
         pan: Offset,
         zoom: Zoom,
         gestureZoom: Float,
