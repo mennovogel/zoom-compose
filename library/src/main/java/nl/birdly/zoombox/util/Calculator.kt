@@ -10,6 +10,13 @@ object Calculator {
         imageSize: Int
     ) = max(0f, scale * imageSize - imageSize)
 
+    // ⚠️ Experimental
+    fun calculateMaxTranslation(
+        scale: Float,
+        parentImageSize: Int,
+        childImageSize: Int
+    ) = max(0f, scale * childImageSize - parentImageSize)
+
     fun calculateOverEdgeTranslationRange(
             translationRange: ClosedFloatingPointRange<Float>,
             imageViewSize: Int
@@ -66,6 +73,35 @@ object Calculator {
                 )
 
         return uncorrectedResult.limitByRange(translationRange)
+    }
+
+    // ⚠️ Experimental
+    /**
+     * Calculate the translation (x or y) we want to animate to after pan to keep the view in
+     * bounds.
+     *
+     * @param scale The scale we want to animate to
+     * @param currentViewSize The current image view size (width or height).
+     */
+    fun keepTranslationWithinBounds(
+        translation: Float,
+        scale: Float,
+        parentZoomViewSize: Int,
+        childZoomViewSize: Int
+    ): Float {
+        /**
+         * The maximum and minimum translation the ImageView should have (with the futureScale),
+         * so the View is still fully visible.
+         */
+        val translationRange = calculateMaxTranslation(
+            scale,
+            parentZoomViewSize,
+            childZoomViewSize
+        ).let {
+            0f..it
+        }
+
+        return translation.limitByRange(translationRange)
     }
 
     private fun Float.limitByRange(range: ClosedFloatingPointRange<Float>) =

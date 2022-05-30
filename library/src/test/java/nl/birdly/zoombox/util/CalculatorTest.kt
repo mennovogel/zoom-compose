@@ -143,4 +143,64 @@ class CalculatorTest {
         )
         assertEquals(0f, abs(result))
     }
+
+    @Test
+    fun keepTranslationWithinBounds_withoutZoom_returnsToCentre() {
+        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+            0f,
+            1f,
+            100,
+            100
+        )))
+    }
+
+    @Test
+    fun keepTranslationWithinBounds_withoutZoomWithTranslation_returnsToCentre() {
+        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+            10000f,
+            1f,
+            100,
+            100
+        )))
+    }
+
+    @Test
+    fun keepTranslationWithinBounds_withZoomWithoutTranslation_doesNotMove() {
+        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+            0f,
+            2f,
+            100,
+            100
+        )))
+    }
+
+    @Test
+    fun keepTranslationWithinBounds_withZoomWithTranslation_returnsToEdge() {
+        assertEquals(100f, abs(Calculator.keepTranslationWithinBounds(
+            100000f,
+            2f,
+            100,
+            100
+        )))
+    }
+
+    @Test
+    fun keepTranslationWithinBounds_withZoomWithNegativeTranslationWithLargeParent_returnsToEdge() {
+        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+            -100000f,
+            2f,
+            200,
+            100
+        )))
+    }
+
+    @Test
+    fun keepTranslationWithinBounds_withZoomTranslationWithLargeParent_returnsToEdge() {
+        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+            100000f,
+            2f,
+            200,
+            100
+        )))
+    }
 }
