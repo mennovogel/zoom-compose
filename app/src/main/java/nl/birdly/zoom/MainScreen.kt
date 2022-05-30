@@ -4,21 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +23,6 @@ import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
-import nl.birdly.zoombox.gesture.transform.ResetOnCanceledHandler
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -60,7 +52,6 @@ fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
             }
         ),
         transformGestureHandler = TransformGestureHandler(
-            onCanceled = ResetOnCanceledHandler(),
             onCondition = OnDoubleTouchCondition()
         )
     ) {

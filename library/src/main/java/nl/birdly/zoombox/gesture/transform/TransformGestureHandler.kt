@@ -10,13 +10,8 @@ import nl.birdly.zoombox.util.detectTransformGestures
 
 class TransformGestureHandler(
     private val panZoomLock: Boolean = false,
-    private val onCanceled: (
-        CoroutineScope,
-        TransformableState,
-        PointerInputScope,
-        Zoom,
-        (Zoom) -> Unit
-    ) -> Unit = { _: CoroutineScope, _: TransformableState, _: PointerInputScope, _: Zoom, _: (Zoom) -> Unit -> },
+    private val onCancelledBehavior: OnCancelledBehavior =
+        ResetToOriginalPositionOnCancelledBehavior(),
     private val onCondition: (pointerEvent: PointerEvent) -> Boolean = { true },
     private val onGesture: (Offset, ClosedFloatingPointRange<Float>, TransformableState, Offset, Zoom, Float, Float, Boolean, (Zoom) -> Unit) -> Unit
     = OnPinchToZoomGestureHandler()
@@ -35,7 +30,13 @@ class TransformGestureHandler(
             onCondition = onCondition,
             panZoomLock = panZoomLock,
             onCanceled = {
-                onCanceled(scope, state, pointerInputScope, zoomProvider(), onZoomUpdated)
+                onCancelledBehavior.onCancelled(
+                    scope,
+                    state,
+                    pointerInputScope,
+                    zoomProvider(),
+                    onZoomUpdated
+                )
             },
             onGesture = { centroid: Offset, pan: Offset, gestureZoom: Float, gestureRotation: Float ->
                 onGesture(

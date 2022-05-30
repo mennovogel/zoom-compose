@@ -4,23 +4,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
-import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
-import nl.birdly.zoombox.gesture.transform.ResetOnCanceledHandler
+import nl.birdly.zoombox.gesture.transform.KeepWithinBoundsOnCancelledBehavior
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 
 @Composable
@@ -30,7 +23,7 @@ fun ImageScreen(asset: String) {
         Modifier
             .fillMaxHeight(),
         transformGestureHandler = TransformGestureHandler(
-            onCanceled = ResetOnCanceledHandler(ResetOnCanceledHandler.Behavior.KeepWithinBounds),
+            onCancelledBehavior = KeepWithinBoundsOnCancelledBehavior(),
         )
     ) {
         Image(
