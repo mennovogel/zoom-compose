@@ -18,20 +18,17 @@ class OnPinchToZoomGestureHandler : (Offset, ClosedFloatingPointRange<Float>, Of
         rotation: Boolean,
         onZoomUpdated: (Zoom) -> Unit
     ) {
-        val oldScale = zoom.scale
-        val newScale = minMax(
+        val newZoom = minMax(
             zoomRange.start,
             zoomRange.endInclusive,
-            zoom.scale * gestureZoom
+            gestureZoom * zoom.scale
         )
-        val newOffset =
-            (zoom.offset + centroid / oldScale).rotateBy(gestureRotate) -
-                    (centroid / newScale + pan * zoom.scale)
-        val newAngle = if (rotation) {
-            zoom.angle + gestureRotate
-        } else {
-            zoom.angle
-        }
-        onZoomUpdated(Zoom(newScale, newAngle, newOffset))
+        onZoomUpdated(zoom.copy(
+            scale = newZoom,
+            offset = Offset(
+                zoom.offset.x + -pan.x * newZoom + (newZoom - zoom.scale) * centroid.x,
+                zoom.offset.y + -pan.y * newZoom + (newZoom - zoom.scale) * centroid.y,
+            )
+        ))
     }
 }
