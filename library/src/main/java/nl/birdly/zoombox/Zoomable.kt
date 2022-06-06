@@ -34,7 +34,7 @@ import kotlin.math.sin
 @Composable
 fun Zoomable(
     modifier: Modifier = Modifier,
-    zoomRange: ClosedFloatingPointRange<Float> = 1f..2f,
+    zoomRange: ClosedFloatingPointRange<Float> = 1f..3f,
     zoomingZIndex: Float = 1f,
     defaultZIndex: Float = 0f,
     rotation: Boolean = false,
