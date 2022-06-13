@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
+import nl.birdly.zoombox.Zoom
 
 class TapHandler(
     private val onDoubleTap: OnDoubleTapHandler? = ZoomOnDoubleTapHandler(),
@@ -19,8 +20,8 @@ class TapHandler(
         pointerInputScope: PointerInputScope,
         state: TransformableState,
         zoomRange: ClosedFloatingPointRange<Float>,
-        zoomProvider: () -> nl.birdly.zoombox.Zoom,
-        onZoomUpdated: (nl.birdly.zoombox.Zoom) -> Unit
+        zoomProvider: () -> Zoom,
+        onZoomUpdated: (Zoom) -> Unit
     ) {
         pointerInputScope.detectTapGestures(
             onDoubleTap = onDoubleTap?.let { onDoubleTap ->

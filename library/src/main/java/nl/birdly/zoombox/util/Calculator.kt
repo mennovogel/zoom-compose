@@ -17,6 +17,26 @@ object Calculator {
             (translationRange.endInclusive + imageViewSize * .5f)
 
     /**
+     * calculateFutureTranslation, but also keep the translation within the child image bounds.
+     */
+    fun calculateFutureTranslation(
+        futureScale: Float,
+        touchPoint: Float,
+        currentViewSize: Int,
+        childImageSize: Int
+    ): Float {
+        val futureTranslation = calculateFutureTranslation(
+            futureScale, touchPoint, currentViewSize
+        )
+        return keepTranslationWithinBounds(
+            futureTranslation,
+            futureScale,
+            currentViewSize,
+            childImageSize
+        )
+    }
+
+    /**
      * Calculate the translation (x or y) we want to animate to after a double tap.
      *
      * @param futureScale The scale we want to animate to

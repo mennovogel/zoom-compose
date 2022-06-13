@@ -8,6 +8,7 @@ import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.animateTo
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.IntSize
 import nl.birdly.zoombox.Zoom
 
@@ -16,6 +17,7 @@ suspend fun TransformableState.animateZoomBy(
     scale: Float,
     touchPoint: Offset,
     size: IntSize,
+    childImageBounds: Rect,
     zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessLow),
     onZoomUpdated: (Zoom) -> Unit
 ) {
@@ -26,12 +28,14 @@ suspend fun TransformableState.animateZoomBy(
     val translationX = Calculator.calculateFutureTranslation(
         scale,
         touchPoint.x,
-        size.width
+        size.width,
+        childImageBounds.width.toInt()
     )
     val translationY = Calculator.calculateFutureTranslation(
         scale,
         touchPoint.y,
-        size.height
+        size.height,
+        childImageBounds.height.toInt()
     )
 
     animateZoomBy(
