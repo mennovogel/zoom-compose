@@ -1,7 +1,5 @@
 package nl.birdly.zoombox.gesture.transform
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -20,7 +18,6 @@ class TransformGestureHandler(
     = OnPinchToZoomGestureHandler()
 ) {
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     suspend operator fun invoke(
         scope: CoroutineScope,
         pointerInputScope: PointerInputScope,

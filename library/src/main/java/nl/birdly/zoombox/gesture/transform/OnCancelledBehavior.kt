@@ -12,7 +12,7 @@ interface OnCancelledBehavior {
         scope: CoroutineScope,
         state: TransformableState,
         pointerInputScope: PointerInputScope,
-        bounds: Rect,
+        childImageBounds: Rect,
         zoom: Zoom,
         onZoomUpdated: (Zoom) -> Unit
     )

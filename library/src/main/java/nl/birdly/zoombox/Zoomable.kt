@@ -30,6 +30,14 @@ import kotlin.math.sin
 
 /**
  * Zooming is based on the example on https://developer.android.google.cn/reference/kotlin/androidx/compose/foundation/gestures/package-summary#(androidx.compose.ui.input.pointer.PointerInputScope).detectTransformGestures(kotlin.Boolean,kotlin.Function4)
+ *
+ * TODO:
+ * - Calculate inner image bounds.
+ * - Support flinging when zoomed in.
+ * - Support to zoom in and stay within bounds. This will fix bug #1.
+ *
+ * Bugs:
+ * #1: Single tap when zoomed in resets position to center,
  */
 @Composable
 fun Zoomable(
