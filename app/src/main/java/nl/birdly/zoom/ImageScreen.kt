@@ -24,7 +24,8 @@ fun ImageScreen(asset: String) {
             .fillMaxHeight(),
         transformGestureHandler = TransformGestureHandler(
             onCancelledBehavior = KeepWithinBoundsOnCancelledBehavior(),
-        )
+        ),
+        zoomRange = 1f..4f
     ) {
         Image(
             bitmap.asImageBitmap(),

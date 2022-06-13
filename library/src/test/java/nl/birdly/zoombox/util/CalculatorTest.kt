@@ -3,6 +3,7 @@ package nl.birdly.zoombox.util
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 class CalculatorTest {
 
@@ -152,55 +153,70 @@ class CalculatorTest {
             100,
             100
         )))
-    }
-
-    @Test
-    fun keepTranslationWithinBounds_withoutZoomWithTranslation_returnsToCentre() {
+        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+            -10000f,
+            1f,
+            100,
+            100
+        )))
         assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
             10000f,
             1f,
             100,
             100
         )))
+        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+            200f,
+            1f,
+            100,
+            50
+        )))
     }
 
     @Test
-    fun keepTranslationWithinBounds_withZoomWithoutTranslation_doesNotMove() {
-        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
+    fun keepTranslationWithinBounds_withZoomWithingBounds_keepsImageInCenter() {
+        // 2039 * 0.5 == 1019.5 -> 1019.5 / 2 == -509.75f
+        assertEquals(-509.75f, Calculator.keepTranslationWithinBounds(
+            0f,
+            1.5f,
+            2039,
+            720
+        ))
+        assertEquals(-1019.5f, Calculator.keepTranslationWithinBounds(
             0f,
             2f,
-            100,
-            100
-        )))
+            2039,
+            720
+        ))
     }
 
     @Test
-    fun keepTranslationWithinBounds_withZoomWithTranslation_returnsToEdge() {
-        assertEquals(100f, abs(Calculator.keepTranslationWithinBounds(
-            100000f,
-            2f,
-            100,
-            100
-        )))
+    fun keepTranslationWithinBounds_withZoomOutOfBounds_keepsImageOnTop() {
+        // 4 * 720 == 2880
+        // 2880 - 2039 == 841
+        // 841 / 2 == 420.5
+        // 2039 * 3 / 2 == 3058.5
+        // 3058.5 - 420.5 == 2618
+        // 3058.5 + 420.5 == 3479
+
+        assertEqualsRounded(-2638f, Calculator.keepTranslationWithinBounds(
+            0f,
+            4f,
+            2039,
+            720
+        ))
+
+        assertEqualsRounded(-3479f, Calculator.keepTranslationWithinBounds(
+            -4000f,
+            4f,
+            2039,
+            720
+        ))
     }
 
-    @Test
-    fun keepTranslationWithinBounds_withZoomWithNegativeTranslationWithLargeParent_returnsToEdge() {
-        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
-            -100000f,
-            2f,
-            200,
-            100
-        )))
-    }
-
-    @Test
-    fun keepTranslationWithinBounds_withZoomTranslationWithLargeParent_returnsToEdge() {
-        assertEquals(0f, abs(Calculator.keepTranslationWithinBounds(
-            100000f,
-            2f,
-            200,
-            100
-        )))
+    private fun assertEqualsRounded(expected: Float, actual: Float, accuracy: Float = 0.0001f) {
+        var isNotEqual = false
+        if ((expected - actual).absoluteValue > accuracy) isNotEqual = true
+        if (isNotEqual) throw AssertionError("$expected is not equal to $actual")
     }
 }

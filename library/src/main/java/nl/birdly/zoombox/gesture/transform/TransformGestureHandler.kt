@@ -1,7 +1,10 @@
 package nl.birdly.zoombox.gesture.transform
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +20,7 @@ class TransformGestureHandler(
     = OnPinchToZoomGestureHandler()
 ) {
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     suspend operator fun invoke(
         scope: CoroutineScope,
         pointerInputScope: PointerInputScope,
@@ -34,6 +38,7 @@ class TransformGestureHandler(
                     scope,
                     state,
                     pointerInputScope,
+                    Rect(0f, 1000f, 1080f, 1720f),
                     zoomProvider(),
                     onZoomUpdated
                 )
