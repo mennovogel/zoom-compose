@@ -34,10 +34,6 @@ import kotlin.math.sin
  * TODO:
  * - Calculate inner image bounds.
  * - Support flinging when zoomed in.
- * - Support to zoom in and stay within bounds. This will fix bug #1.
- *
- * Bugs:
- * #1: Single tap when zoomed in resets position to center,
  */
 @Composable
 fun Zoomable(
