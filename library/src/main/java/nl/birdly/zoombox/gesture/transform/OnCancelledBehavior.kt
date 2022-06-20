@@ -4,7 +4,7 @@ import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
-import nl.birdly.zoombox.Zoom
+import nl.birdly.zoombox.ZoomState
 
 interface OnCancelledBehavior {
 
@@ -13,7 +13,7 @@ interface OnCancelledBehavior {
         state: TransformableState,
         pointerInputScope: PointerInputScope,
         childImageBounds: Rect,
-        zoom: Zoom,
-        onZoomUpdated: (Zoom) -> Unit
+        zoomState: ZoomState,
+        onZoomUpdated: (ZoomState) -> Unit
     )
 }

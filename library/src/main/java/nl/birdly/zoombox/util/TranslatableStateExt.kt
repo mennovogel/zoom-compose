@@ -10,18 +10,18 @@ import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.IntSize
-import nl.birdly.zoombox.Zoom
+import nl.birdly.zoombox.ZoomState
 
 suspend fun TransformableState.animateZoomBy(
-    previousZoom: Zoom,
+    previousZoomState: ZoomState,
     scale: Float,
     touchPoint: Offset,
     size: IntSize,
     childImageBounds: Rect,
     zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessLow),
-    onZoomUpdated: (Zoom) -> Unit
+    onZoomUpdated: (ZoomState) -> Unit
 ) {
-    Log.d("Menno", "animateZoomBy: $previousZoom, $scale")
+    Log.d("Menno", "animateZoomBy: $previousZoomState, $scale")
     require(scale > 0) {
         "scale value should be greater than 0"
     }
@@ -39,8 +39,8 @@ suspend fun TransformableState.animateZoomBy(
     )
 
     animateZoomBy(
-        previousZoom,
-        previousZoom.copy(
+        previousZoomState,
+        previousZoomState.copy(
             scale = scale,
             offset = Offset(
                 translationX,
@@ -51,21 +51,21 @@ suspend fun TransformableState.animateZoomBy(
 }
 
 suspend fun TransformableState.animateZoomBy(
-    previousZoom: Zoom,
-    nextZoom: Zoom,
+    previousZoomState: ZoomState,
+    nextZoomState: ZoomState,
     zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessLow),
-    onZoomUpdated: (Zoom) -> Unit
+    onZoomUpdated: (ZoomState) -> Unit
 ) {
-    var currentZoom = previousZoom
+    var currentZoom = previousZoomState
     transform {
         AnimationState(initialValue = 0f).animateTo(1f, zoomAnimationSpec) {
-            val newScale = previousZoom.scale + this.value * (nextZoom.scale - previousZoom.scale)
+            val newScale = previousZoomState.scale + this.value * (nextZoomState.scale - previousZoomState.scale)
 
             currentZoom = currentZoom.copy(
                 scale = newScale,
                 offset = Offset(
-                    x = previousZoom.offset.x * (1 - this.value) - nextZoom.offset.x * this.value,
-                    y = previousZoom.offset.y * (1 - this.value) - nextZoom.offset.y * this.value
+                    x = previousZoomState.offset.x * (1 - this.value) - nextZoomState.offset.x * this.value,
+                    y = previousZoomState.offset.y * (1 - this.value) - nextZoomState.offset.y * this.value
                 )
             )
             onZoomUpdated(currentZoom)

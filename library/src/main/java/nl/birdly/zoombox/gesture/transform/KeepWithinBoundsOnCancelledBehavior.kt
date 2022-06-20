@@ -6,7 +6,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import nl.birdly.zoombox.Zoom
+import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.Calculator
 import nl.birdly.zoombox.util.animateZoomBy
 import nl.birdly.zoombox.util.minMax
@@ -18,37 +18,37 @@ class KeepWithinBoundsOnCancelledBehavior : OnCancelledBehavior {
         state: TransformableState,
         pointerInputScope: PointerInputScope,
         childImageBounds: Rect,
-        zoom: Zoom,
-        onZoomUpdated: (Zoom) -> Unit
+        zoomState: ZoomState,
+        onZoomUpdated: (ZoomState) -> Unit
     ) {
         scope.launch {
             val translationXWithinBounds = Calculator.keepTranslationWithinBounds(
-                -zoom.offset.x,
-                zoom.scale,
+                -zoomState.offset.x,
+                zoomState.scale,
                 pointerInputScope.size.width,
                 childImageBounds.width.toInt()
             )
             val translationYWithinBounds = Calculator.keepTranslationWithinBounds(
-                -zoom.offset.y,
-                zoom.scale,
+                -zoomState.offset.y,
+                zoomState.scale,
                 pointerInputScope.size.height,
                 childImageBounds.height.toInt()
             )
 
             val maxTranslationX = Calculator.calculateMaxTranslation(
-                zoom.scale,
+                zoomState.scale,
                 pointerInputScope.size.width
             )
-            val translationX = minMax(-maxTranslationX, 0f, -zoom.offset.x)
+            val translationX = minMax(-maxTranslationX, 0f, -zoomState.offset.x)
             val maxTranslationY = Calculator.calculateMaxTranslation(
-                zoom.scale,
+                zoomState.scale,
                 pointerInputScope.size.height
             )
-            val translationY= minMax(-maxTranslationY, 0f, -zoom.offset.y)
+            val translationY= minMax(-maxTranslationY, 0f, -zoomState.offset.y)
 
             state.animateZoomBy(
-                zoom,
-                zoom.copy(
+                zoomState,
+                zoomState.copy(
                     offset = Offset(
                         translationXWithinBounds,
                         translationYWithinBounds

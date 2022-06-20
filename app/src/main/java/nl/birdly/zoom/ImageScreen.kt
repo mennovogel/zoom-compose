@@ -30,7 +30,6 @@ fun ImageScreen(asset: String) {
         Image(
             bitmap.asImageBitmap(),
             contentDescription = asset,
-            Modifier.align(Alignment.Center)
         )
     }
 }

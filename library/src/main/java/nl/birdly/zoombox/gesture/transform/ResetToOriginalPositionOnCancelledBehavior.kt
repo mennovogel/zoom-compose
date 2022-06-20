@@ -5,7 +5,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import nl.birdly.zoombox.Zoom
+import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.animateZoomBy
 
 class ResetToOriginalPositionOnCancelledBehavior : OnCancelledBehavior {
@@ -15,13 +15,13 @@ class ResetToOriginalPositionOnCancelledBehavior : OnCancelledBehavior {
         state: TransformableState,
         pointerInputScope: PointerInputScope,
         childImageBounds: Rect,
-        zoom: Zoom,
-        onZoomUpdated: (Zoom) -> Unit
+        zoomState: ZoomState,
+        onZoomUpdated: (ZoomState) -> Unit
     ) {
         scope.launch {
             state.animateZoomBy(
-                zoom,
-                Zoom(),
+                zoomState,
+                ZoomState(),
                 onZoomUpdated = onZoomUpdated
             )
         }

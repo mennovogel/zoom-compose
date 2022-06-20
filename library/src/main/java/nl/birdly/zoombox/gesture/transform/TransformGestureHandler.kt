@@ -2,11 +2,10 @@ package nl.birdly.zoombox.gesture.transform
 
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
-import nl.birdly.zoombox.Zoom
+import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.detectTransformGestures
 
 class TransformGestureHandler(
@@ -14,7 +13,7 @@ class TransformGestureHandler(
     private val onCancelledBehavior: OnCancelledBehavior =
         ResetToOriginalPositionOnCancelledBehavior(),
     private val onCondition: (pointerEvent: PointerEvent) -> Boolean = { true },
-    private val onGesture: (Offset, ClosedFloatingPointRange<Float>, Offset, Zoom, Float, Float, Boolean, (Zoom) -> Unit) -> Unit
+    private val onGesture: (Offset, ClosedFloatingPointRange<Float>, Offset, ZoomState, Float, Float, Boolean, (ZoomState) -> Unit) -> Unit
     = OnPinchToZoomGestureHandler()
 ) {
 
@@ -24,9 +23,11 @@ class TransformGestureHandler(
         state: TransformableState,
         zoomRange: ClosedFloatingPointRange<Float>,
         rotation: Boolean,
-        zoomProvider: () -> Zoom,
-        onZoomUpdated: (Zoom) -> Unit
+        zoomStateProvider: () -> ZoomState,
+        onZoomUpdated: (ZoomState) -> Unit
     ) {
+        val zoom = zoomStateProvider()
+        zoom.childRect ?: return
         pointerInputScope.detectTransformGestures(
             onCondition = onCondition,
             panZoomLock = panZoomLock,
@@ -35,8 +36,8 @@ class TransformGestureHandler(
                     scope,
                     state,
                     pointerInputScope,
-                    Rect(0f, 1000f, 1080f, 1720f),
-                    zoomProvider(),
+                    zoom.childRect,
+                    zoomStateProvider(),
                     onZoomUpdated
                 )
             },
@@ -45,7 +46,7 @@ class TransformGestureHandler(
                     centroid,
                     zoomRange,
                     pan,
-                    zoomProvider(),
+                    zoomStateProvider(),
                     gestureZoom,
                     gestureRotation,
                     rotation,
