@@ -18,7 +18,7 @@ suspend fun TransformableState.animateZoomBy(
     touchPoint: Offset,
     size: IntSize,
     childImageBounds: Rect,
-    zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessLow),
+    zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessMediumLow),
     onZoomUpdated: (ZoomState) -> Unit
 ) {
     Log.d("Menno", "animateZoomBy: $previousZoomState, $scale")

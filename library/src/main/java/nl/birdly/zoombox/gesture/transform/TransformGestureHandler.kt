@@ -31,7 +31,7 @@ class TransformGestureHandler(
         pointerInputScope.detectTransformGestures(
             onCondition = onCondition,
             panZoomLock = panZoomLock,
-            onCanceled = {
+            onCancelled = {
                 onCancelledBehavior.onCancelled(
                     scope,
                     state,

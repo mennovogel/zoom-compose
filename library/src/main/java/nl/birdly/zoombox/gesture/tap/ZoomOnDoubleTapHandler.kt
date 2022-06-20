@@ -1,5 +1,8 @@
 package nl.birdly.zoombox.gesture.tap
 
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputScope
@@ -8,7 +11,11 @@ import kotlinx.coroutines.launch
 import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.animateZoomBy
 
-class ZoomOnDoubleTapHandler : OnDoubleTapHandler {
+class ZoomOnDoubleTapHandler(
+    private val zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(
+        stiffness = Spring.StiffnessMediumLow
+    ),
+) : OnDoubleTapHandler {
 
     override fun invoke(
         scope: CoroutineScope,
@@ -34,7 +41,8 @@ class ZoomOnDoubleTapHandler : OnDoubleTapHandler {
                 offset,
                 pointerInputScope.size,
                 zoom.childRect,
-                onZoomUpdated = onZoomUpdated
+                onZoomUpdated = onZoomUpdated,
+                zoomAnimationSpec = zoomAnimationSpec
             )
         }
     }

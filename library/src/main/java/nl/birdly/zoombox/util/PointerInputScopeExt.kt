@@ -19,7 +19,7 @@ import kotlin.math.abs
 
 suspend fun PointerInputScope.detectTransformGestures(
     panZoomLock: Boolean = false,
-    onCanceled: () -> Unit = {},
+    onCancelled: () -> Unit = {},
     onCondition: (pointerEvent: PointerEvent) -> Boolean,
     onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit
 ) {
@@ -38,7 +38,7 @@ suspend fun PointerInputScope.detectTransformGestures(
 
                 val canceled = event.changes.any { it.positionChangeConsumed() }
 
-                if (event.changes.size == 1 && event.changes.any { it.changedToUp() }) onCanceled()
+                if (event.changes.size == 1 && event.changes.any { it.changedToUp() }) onCancelled()
 
                 if (!canceled && onCondition(event)) {
                     val zoomChange = event.calculateZoom()

@@ -3,6 +3,9 @@ package nl.birdly.zoom
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.StringBuilderPrinter
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
@@ -13,6 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
+import nl.birdly.zoombox.gesture.tap.TapHandler
+import nl.birdly.zoombox.gesture.tap.ZoomOnDoubleTapHandler
 import nl.birdly.zoombox.gesture.transform.KeepWithinBoundsOnCancelledBehavior
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 
@@ -25,6 +30,9 @@ fun ImageScreen(asset: String) {
         transformGestureHandler = TransformGestureHandler(
             onCancelledBehavior = KeepWithinBoundsOnCancelledBehavior(),
         ),
+        tapHandler = TapHandler(ZoomOnDoubleTapHandler(
+            zoomAnimationSpec = SpringSpec(stiffness = Spring.StiffnessVeryLow)
+        )),
         zoomRange = 1f..4f
     ) {
         Image(

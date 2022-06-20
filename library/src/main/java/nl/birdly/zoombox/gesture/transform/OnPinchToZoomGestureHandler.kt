@@ -7,8 +7,8 @@ import nl.birdly.zoombox.util.minMax
 class OnPinchToZoomGestureHandler : (Offset, ClosedFloatingPointRange<Float>, Offset, ZoomState, Float, Float, Boolean, (ZoomState) -> Unit) -> Unit {
 
     override fun invoke(
-        centroid: Offset, // The position in pixels of the centre zoom position where 0,0 is the
-        // top left corner
+        // The position in pixels of the centre zoom position where 0,0 is the top left corner
+        centroid: Offset,
         zoomRange: ClosedFloatingPointRange<Float>,
         pan: Offset,
         zoomState: ZoomState,
@@ -17,16 +17,16 @@ class OnPinchToZoomGestureHandler : (Offset, ClosedFloatingPointRange<Float>, Of
         rotation: Boolean,
         onZoomUpdated: (ZoomState) -> Unit
     ) {
-        val newZoom = minMax(
+        val newScale = minMax(
             zoomRange.start,
             zoomRange.endInclusive,
             gestureZoom * zoomState.scale
         )
         onZoomUpdated(zoomState.copy(
-            scale = newZoom,
+            scale = newScale,
             offset = Offset(
-                zoomState.offset.x + -pan.x * newZoom + (newZoom - zoomState.scale) * centroid.x,
-                zoomState.offset.y + -pan.y * newZoom + (newZoom - zoomState.scale) * centroid.y,
+                zoomState.offset.x + -pan.x * newScale + (newScale - zoomState.scale) * centroid.x,
+                zoomState.offset.y + -pan.y * newScale + (newScale - zoomState.scale) * centroid.y,
             )
         ))
     }
