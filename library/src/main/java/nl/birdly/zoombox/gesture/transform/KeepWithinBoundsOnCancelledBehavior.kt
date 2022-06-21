@@ -35,17 +35,6 @@ class KeepWithinBoundsOnCancelledBehavior : OnCancelledBehavior {
                 childImageBounds.height.toInt()
             )
 
-            val maxTranslationX = Calculator.calculateMaxTranslation(
-                zoomState.scale,
-                pointerInputScope.size.width
-            )
-            val translationX = minMax(-maxTranslationX, 0f, -zoomState.offset.x)
-            val maxTranslationY = Calculator.calculateMaxTranslation(
-                zoomState.scale,
-                pointerInputScope.size.height
-            )
-            val translationY= minMax(-maxTranslationY, 0f, -zoomState.offset.y)
-
             state.animateZoomBy(
                 zoomState,
                 zoomState.copy(
