@@ -3,9 +3,13 @@ package nl.birdly.zoombox
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +50,7 @@ fun Zoomable(
     rotation: Boolean = false,
     tapHandler: TapHandler = TapHandler(),
     transformGestureHandler: TransformGestureHandler = TransformGestureHandler(),
-    content: @Composable () -> Unit
+    content: @Composable (ZoomState) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     var zoomState: ZoomState by remember { mutableStateOf(ZoomState())}
@@ -108,7 +112,7 @@ fun Zoomable(
                         )
                     }
             }) {
-                content()
+                content(zoomState)
             }
         }
     )
