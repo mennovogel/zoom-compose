@@ -44,10 +44,10 @@ fun MainScreen(navController: NavHostController) {
                     navController.navigate("image/$asset")
                 }
 
+                ImageRow(title = "Highlander", asset = "Highlander.jpg", onTap)
+                ImageRow(title = "Lizard", asset = "Lizard.jpg", onTap)
                 ImageRow(title = "Dolphin", asset = "Dolphin.jpg", onTap)
-                ImageRow(title = "Mountains", asset = "Mountains.jpg", onTap)
                 ImageRow(title = "Shanghai", asset = "Shanghai.jpg", onTap)
-                ImageRow(title = "Sunset", asset = "Sunset.jpg", onTap)
             }
         }
     }
