@@ -7,14 +7,9 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
@@ -27,19 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
-/**
- * Zooming is based on the example on https://developer.android.google.cn/reference/kotlin/androidx/compose/foundation/gestures/package-summary#(androidx.compose.ui.input.pointer.PointerInputScope).detectTransformGestures(kotlin.Boolean,kotlin.Function4)
- *
- * TODO:
- * - Support flinging when zoomed in.
- */
 @Composable
 fun Zoomable(
     modifier: Modifier = Modifier,
+    mutableZoomState: MutableZoomState = rememberMutableZoomState(),
     zoomRange: ClosedFloatingPointRange<Float> = 1f..3f,
     zoomingZIndex: Float = 1f,
     defaultZIndex: Float = 0f,
@@ -48,10 +35,9 @@ fun Zoomable(
     content: @Composable (ZoomState) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    //TODO: implement state hoisting here! https://android.googlesource.com/platform/frameworks/support/+/androidx-main/compose/docs/compose-api-guidelines.md#default-policies-through-hoisted-state-objects
-    var zoomState: ZoomState by remember { mutableStateOf(ZoomState())}
+    val zoomState = mutableZoomState.value
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
-        zoomState = zoomState.copy(
+        mutableZoomState.value = zoomState.copy(
             scale = zoomState.scale * zoomChange,
             angle = zoomState.angle + rotationChange,
             offset = zoomState.offset + offsetChange
@@ -74,9 +60,9 @@ fun Zoomable(
                     this,
                     state,
                     zoomRange,
-                    zoomStateProvider = { zoomState }
+                    zoomStateProvider = { mutableZoomState.value }
                 ) { newZoom ->
-                    zoomState = newZoom
+                    mutableZoomState.value = newZoom
                 }
             }
             .pointerInput(Unit) {
@@ -85,9 +71,9 @@ fun Zoomable(
                     this,
                     state,
                     zoomRange,
-                    zoomStateProvider = { zoomState }
+                    zoomStateProvider = { mutableZoomState.value }
                 ) { newZoom ->
-                    zoomState = newZoom
+                    mutableZoomState.value = newZoom
                 }
             },
         content = {
@@ -102,7 +88,7 @@ fun Zoomable(
                         positionInParent.y + layoutCoordinates.size.height
                     )
                     if (zoomState.childRect != childRect) {
-                        zoomState = zoomState.copy(
+                        mutableZoomState.value = zoomState.copy(
                             childRect = childRect
                         )
                     }
@@ -110,14 +96,6 @@ fun Zoomable(
                 content(zoomState)
             }
         }
-    )
-}
-
-fun Offset.rotateBy(angle: Float): Offset {
-    val angleInRadians = angle * PI / 180
-    return Offset(
-        (x * cos(angleInRadians) - y * sin(angleInRadians)).toFloat(),
-        (x * sin(angleInRadians) + y * cos(angleInRadians)).toFloat()
     )
 }
 

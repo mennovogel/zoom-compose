@@ -35,8 +35,11 @@ fun MainScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-            Column(Modifier.verticalScroll(rememberScrollState())
-                .background(MaterialTheme.colors.background)) {
+            Column(
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .background(MaterialTheme.colors.background)
+            ) {
                 val onTap = { asset: String ->
                     navController.navigate("image/$asset")
                 }
