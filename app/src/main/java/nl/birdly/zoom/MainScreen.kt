@@ -27,7 +27,6 @@ import nl.birdly.zoombox.Zoomable
 import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
-import nl.birdly.zoombox.util.swipeToDismiss
 
 @Composable
 fun MainScreen(navController: NavHostController) {

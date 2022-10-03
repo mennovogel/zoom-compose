@@ -3,13 +3,9 @@ package nl.birdly.zoombox
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.rememberTransformableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,12 +43,12 @@ fun Zoomable(
     zoomRange: ClosedFloatingPointRange<Float> = 1f..3f,
     zoomingZIndex: Float = 1f,
     defaultZIndex: Float = 0f,
-    rotation: Boolean = false,
     tapHandler: TapHandler = TapHandler(),
     transformGestureHandler: TransformGestureHandler = TransformGestureHandler(),
     content: @Composable (ZoomState) -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    //TODO: implement state hoisting here! https://android.googlesource.com/platform/frameworks/support/+/androidx-main/compose/docs/compose-api-guidelines.md#default-policies-through-hoisted-state-objects
     var zoomState: ZoomState by remember { mutableStateOf(ZoomState())}
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
         zoomState = zoomState.copy(
@@ -89,7 +85,6 @@ fun Zoomable(
                     this,
                     state,
                     zoomRange,
-                    rotation,
                     zoomStateProvider = { zoomState }
                 ) { newZoom ->
                     zoomState = newZoom
