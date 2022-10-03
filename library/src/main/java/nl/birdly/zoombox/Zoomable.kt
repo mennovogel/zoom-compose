@@ -1,24 +1,17 @@
 package nl.birdly.zoombox
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
@@ -95,18 +88,4 @@ fun Zoomable(
             }
         }
     )
-}
-
-@Preview
-@Composable
-fun ZoomablePreview() {
-    MaterialTheme {
-        val bitmap: Bitmap = with(LocalContext.current.assets.open("Dolphin.jpg")){
-            BitmapFactory.decodeStream(this)
-        }
-
-        Zoomable {
-            Image(bitmap.asImageBitmap(), contentDescription = "")
-        }
-    }
 }
