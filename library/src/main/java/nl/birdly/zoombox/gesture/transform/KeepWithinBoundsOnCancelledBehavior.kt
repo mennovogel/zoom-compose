@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.Calculator
 import nl.birdly.zoombox.util.animateZoomBy
-import nl.birdly.zoombox.util.minMax
 
 class KeepWithinBoundsOnCancelledBehavior : OnCancelledBehavior {
 

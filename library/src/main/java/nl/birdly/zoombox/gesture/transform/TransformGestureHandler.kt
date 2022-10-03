@@ -13,7 +13,7 @@ class TransformGestureHandler(
     private val onCancelledBehavior: OnCancelledBehavior =
         ResetToOriginalPositionOnCancelledBehavior(),
     private val onCondition: (pointerEvent: PointerEvent) -> Boolean = { true },
-    private val onGesture: (Offset, ClosedFloatingPointRange<Float>, Offset, ZoomState, Float, Float, (ZoomState) -> Unit) -> Unit
+    private val onGesture: (Offset, ClosedFloatingPointRange<Float>, Offset, ZoomState, Float, (ZoomState) -> Unit) -> Unit
     = OnPinchToZoomGestureHandler()
 ) {
 
@@ -47,7 +47,6 @@ class TransformGestureHandler(
                     pan,
                     zoomStateProvider(),
                     gestureZoom,
-                    gestureRotation,
                     onZoomUpdated
                 )
             }

@@ -39,7 +39,6 @@ fun Zoomable(
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
         mutableZoomState.value = zoomState.copy(
             scale = zoomState.scale * zoomChange,
-            angle = zoomState.angle + rotationChange,
             offset = zoomState.offset + offsetChange
         )
     }
@@ -51,7 +50,6 @@ fun Zoomable(
                 scaleY = zoomState.scale,
                 translationX = -zoomState.offset.x,
                 translationY = -zoomState.offset.y,
-                rotationZ = zoomState.angle,
                 transformOrigin = TransformOrigin(0f, 0f)
             )
             .zIndex(if (zoomState.scale > 1.0f) zoomingZIndex else defaultZIndex)

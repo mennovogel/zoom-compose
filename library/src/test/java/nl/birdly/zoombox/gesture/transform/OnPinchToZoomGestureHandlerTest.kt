@@ -73,8 +73,8 @@ class OnPinchToZoomGestureHandlerTest {
         var updatedZoomState: ZoomState? = null
 
         invoke(
-            zoomState = ZoomState(scale = 1.1f, offset = Offset(10f, 0f)),
             centroid = Offset(100f, 0f),
+            zoomState = ZoomState(scale = 1.1f, offset = Offset(10f, 0f)),
             gestureZoom = 1.1f
         ) {
             updatedZoomState = it
@@ -127,9 +127,9 @@ class OnPinchToZoomGestureHandlerTest {
         var updatedZoomState: ZoomState? = null
 
         invoke(
-            zoomState = ZoomState(scale = 2f),
             centroid = Offset.Zero,
             zoomRange = 1f..2f,
+            zoomState = ZoomState(scale = 2f),
             gestureZoom = 0.5f
         ) {
             updatedZoomState = it
@@ -146,9 +146,9 @@ class OnPinchToZoomGestureHandlerTest {
         var updatedZoomState: ZoomState? = null
 
         invoke(
-            zoomState = ZoomState(scale = 2f, offset = Offset(50f, 50f)),
             centroid = Offset(50f, 50f),
-            pan = Offset(-10f, 10f)
+            pan = Offset(-10f, 10f),
+            zoomState = ZoomState(scale = 2f, offset = Offset(50f, 50f))
         ) {
             updatedZoomState = it
         }
@@ -165,7 +165,6 @@ class OnPinchToZoomGestureHandlerTest {
         if ((expected.scale - actual.scale).absoluteValue > accuracy) isNotEqual = true
         if ((expected.offset.x - actual.offset.x).absoluteValue > accuracy) isNotEqual = true
         if ((expected.offset.y - actual.offset.y).absoluteValue > accuracy) isNotEqual = true
-        if ((expected.angle - actual.angle).absoluteValue > accuracy) isNotEqual = true
         if (isNotEqual) throw AssertionError("$expected is not equal to $actual")
     }
 
@@ -175,8 +174,6 @@ class OnPinchToZoomGestureHandlerTest {
         pan: Offset = Offset(0f, 0f),
         zoomState: ZoomState = ZoomState(),
         gestureZoom: Float = 1f,
-        gestureRotate: Float = 0f,
-        rotation: Boolean = false,
         onZoomUpdated: (ZoomState) -> Unit
     ) {
         handler.invoke(
@@ -185,8 +182,6 @@ class OnPinchToZoomGestureHandlerTest {
             pan,
             zoomState,
             gestureZoom,
-            gestureRotate,
-            rotation,
             onZoomUpdated
         )
     }
