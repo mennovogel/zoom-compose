@@ -4,7 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.minMax
 
-class OnPinchToZoomGestureHandler : (Offset, ClosedFloatingPointRange<Float>, Offset, ZoomState, Float, (ZoomState) -> Unit) -> Unit {
+class OnPinchToZoomGestureHandler : OnPinchGestureHandler {
 
     override fun invoke(
         // The position in pixels of the centre zoom position where 0,0 is the top left corner

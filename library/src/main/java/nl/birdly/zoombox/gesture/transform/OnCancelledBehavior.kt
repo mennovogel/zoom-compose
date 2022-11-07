@@ -8,7 +8,7 @@ import nl.birdly.zoombox.ZoomState
 
 interface OnCancelledBehavior {
 
-    fun onCancelled(
+    operator fun invoke(
         scope: CoroutineScope,
         state: TransformableState,
         pointerInputScope: PointerInputScope,

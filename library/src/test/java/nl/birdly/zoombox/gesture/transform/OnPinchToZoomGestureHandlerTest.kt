@@ -3,7 +3,6 @@ package nl.birdly.zoombox.gesture.transform
 import androidx.compose.ui.geometry.Offset
 import nl.birdly.zoombox.ZoomState
 import org.junit.Test
-import java.lang.AssertionError
 import kotlin.math.absoluteValue
 
 class OnPinchToZoomGestureHandlerTest {

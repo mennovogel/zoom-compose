@@ -26,7 +26,7 @@ class TapHandler(
         pointerInputScope.detectTapGestures(
             onDoubleTap = onDoubleTap?.let { onDoubleTap ->
                 { offset: Offset ->
-                    onDoubleTap(
+                    onDoubleTap.invoke(
                         scope,
                         pointerInputScope,
                         state,

@@ -1,6 +1,5 @@
 package nl.birdly.zoombox.util
 
-import android.util.Log
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.Spring
@@ -21,7 +20,6 @@ suspend fun TransformableState.animateZoomBy(
     zoomAnimationSpec: AnimationSpec<Float> = SpringSpec(stiffness = Spring.StiffnessMediumLow),
     onZoomUpdated: (ZoomState) -> Unit
 ) {
-    Log.d("Menno", "animateZoomBy: $previousZoomState, $scale")
     require(scale > 0) {
         "scale value should be greater than 0"
     }

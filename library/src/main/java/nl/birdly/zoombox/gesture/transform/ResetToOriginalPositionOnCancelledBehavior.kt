@@ -10,7 +10,7 @@ import nl.birdly.zoombox.util.animateZoomBy
 
 class ResetToOriginalPositionOnCancelledBehavior : OnCancelledBehavior {
 
-    override fun onCancelled(
+    override fun invoke(
         scope: CoroutineScope,
         state: TransformableState,
         pointerInputScope: PointerInputScope,
