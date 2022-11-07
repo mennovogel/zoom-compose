@@ -1,6 +1,6 @@
 # Zoom
 
-Compose Zoom is an Android library to zoom in Composables using pinch and double-tap gestures.
+Zoom Compose is an Android library to zoom in Composables using pinch and double-tap gestures.
 
 ![](https://github.com/mennovogel/zoom-compose/raw/main/preview.gif)
 
@@ -78,4 +78,4 @@ Zoomable(
 
 ## Licence
 
-Compose Zoom is available under the MIT license.
+Zoom Compose is available under the MIT license.
