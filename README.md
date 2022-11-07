@@ -1,4 +1,4 @@
-# Zoom
+# Zoom Compose
 
 Zoom Compose is an Android library to zoom in Composables using pinch and double-tap gestures.
 
