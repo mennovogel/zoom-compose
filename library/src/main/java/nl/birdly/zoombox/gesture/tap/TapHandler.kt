@@ -12,7 +12,7 @@ class TapHandler(
     private val onDoubleTap: OnDoubleTapHandler? = ZoomOnDoubleTapHandler(),
     private val onLongPress: ((Offset) -> Unit)? = null,
     private val onPress: suspend PressGestureScope.(Offset) -> Unit = { },
-    private val onTap: ((Offset) -> Unit)? = null
+    private val onTap: (() -> Unit)? = null
 ) {
 
     suspend operator fun invoke(
@@ -39,7 +39,7 @@ class TapHandler(
             },
             onLongPress = onLongPress,
             onPress = onPress,
-            onTap = onTap
+            onTap = onTap?.let { onTap -> { onTap() } }
         )
     }
 }

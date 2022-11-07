@@ -10,8 +10,7 @@ import nl.birdly.zoombox.util.detectTransformGestures
 
 class TransformGestureHandler(
     private val panZoomLock: Boolean = false,
-    private val onCancelledBehavior: OnCancelledBehavior =
-        ResetToOriginalPositionOnCancelledBehavior(),
+    private val onCancelledBehavior: OnCancelledBehavior = KeepWithinBoundsOnCancelledBehavior(),
     private val onCondition: (pointerEvent: PointerEvent) -> Boolean = { true },
     private val onPinchGesture: OnPinchGestureHandler = OnPinchToZoomGestureHandler()
 ) {

@@ -16,6 +16,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,7 +27,9 @@ import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
 import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
+import nl.birdly.zoombox.gesture.transform.ResetToOriginalPositionOnCancelledBehavior
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
+import nl.birdly.zoombox.rememberMutableZoomState
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -44,27 +47,32 @@ fun MainScreen(navController: NavHostController) {
                     navController.navigate("image/$asset")
                 }
 
-                ImageRow(title = "Highlander", asset = "Highlander.jpg", onTap)
-                ImageRow(title = "Lizard", asset = "Lizard.jpg", onTap)
-                ImageRow(title = "Dolphin", asset = "Dolphin.jpg", onTap)
-                ImageRow(title = "Shanghai", asset = "Shanghai.jpg", onTap)
+                ImageRow(contentDescription = "Highlander", asset = "Highlander.jpg", onTap)
+                ImageRow(contentDescription = "Lizard", asset = "Lizard.jpg", onTap)
+                ImageRow(contentDescription = "Dolphin", asset = "Dolphin.jpg", onTap)
+                ImageRow(contentDescription = "Shanghai", asset = "Shanghai.jpg", onTap)
             }
         }
     }
 }
 
 @Composable
-fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
+fun ImageRow(contentDescription: String, asset: String, onTap: (String) -> Unit) {
     Text(
-        text = title,
+        text = contentDescription,
         style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
         modifier = Modifier
             .padding(
                 start = 16.dp, top = 24.dp, bottom = 8.dp
             )
     )
-    val bitmap: Bitmap = LocalContext.current.assetsToBitmap(asset)
+    val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(asset).asImageBitmap()
+
+    val zoomState = rememberMutableZoomState()
+    zoomState.value.scale
     Zoomable(
+        zoomState = zoomState,
+        zoomRange = 0.8f..3f,
         tapHandler = TapHandler(
             onDoubleTap = null,
             onTap = {
@@ -72,6 +80,7 @@ fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
             }
         ),
         transformGestureHandler = TransformGestureHandler(
+            onCancelledBehavior = ResetToOriginalPositionOnCancelledBehavior(),
             onCondition = OnDoubleTouchCondition()
         )
     ) {
@@ -79,7 +88,7 @@ fun ImageRow(title: String, asset: String, onTap: (String) -> Unit) {
             Modifier.padding(8.dp),
             elevation = (it.scale * 10f).dp
         ) {
-            Image(bitmap.asImageBitmap(), contentDescription = title)
+            Image(bitmap, contentDescription)
         }
     }
 }

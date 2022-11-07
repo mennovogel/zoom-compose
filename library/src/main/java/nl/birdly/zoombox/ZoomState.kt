@@ -19,7 +19,7 @@ class MutableZoomState(initial: ZoomState) {
 data class ZoomState(
     val scale: Float = 1f,
     val offset: Offset = Offset.Zero,
-    val childRect: Rect? = null
+    internal val childRect: Rect? = null
 )
 
 @Composable

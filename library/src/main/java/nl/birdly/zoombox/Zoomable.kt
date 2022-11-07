@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -19,7 +20,7 @@ import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 @Composable
 fun Zoomable(
     modifier: Modifier = Modifier,
-    mutableZoomState: MutableZoomState = rememberMutableZoomState(),
+    zoomState: MutableZoomState = rememberMutableZoomState(),
     zoomRange: ClosedFloatingPointRange<Float> = 1f..3f,
     zoomingZIndex: Float = 1f,
     defaultZIndex: Float = 0f,
@@ -28,32 +29,34 @@ fun Zoomable(
     content: @Composable (ZoomState) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val zoomState = mutableZoomState.value
+    val immutableZoomState = zoomState.value
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
-        mutableZoomState.value = zoomState.copy(
-            scale = zoomState.scale * zoomChange,
-            offset = zoomState.offset + offsetChange
+        zoomState.value = immutableZoomState.copy(
+            scale = immutableZoomState.scale * zoomChange,
+            offset = immutableZoomState.offset + offsetChange
         )
     }
 
+    val isMoving = immutableZoomState.scale != 1.0f ||
+            immutableZoomState.offset != Offset(0f, 0f)
     Box(
         modifier = modifier
             .graphicsLayer(
-                scaleX = zoomState.scale,
-                scaleY = zoomState.scale,
-                translationX = -zoomState.offset.x,
-                translationY = -zoomState.offset.y,
+                scaleX = immutableZoomState.scale,
+                scaleY = immutableZoomState.scale,
+                translationX = -immutableZoomState.offset.x,
+                translationY = -immutableZoomState.offset.y,
                 transformOrigin = TransformOrigin(0f, 0f)
             )
-            .zIndex(if (zoomState.scale > 1.0f) zoomingZIndex else defaultZIndex)
+            .zIndex(if (isMoving) zoomingZIndex else defaultZIndex)
             .pointerInput(Unit) {
                 tapHandler(scope,
                     this,
                     state,
                     zoomRange,
-                    zoomStateProvider = { mutableZoomState.value }
+                    zoomStateProvider = { zoomState.value }
                 ) { newZoom ->
-                    mutableZoomState.value = newZoom
+                    zoomState.value = newZoom
                 }
             }
             .pointerInput(Unit) {
@@ -62,9 +65,9 @@ fun Zoomable(
                     this,
                     state,
                     zoomRange,
-                    zoomStateProvider = { mutableZoomState.value }
+                    zoomStateProvider = { zoomState.value }
                 ) { newZoom ->
-                    mutableZoomState.value = newZoom
+                    zoomState.value = newZoom
                 }
             },
         content = {
@@ -78,13 +81,13 @@ fun Zoomable(
                         positionInParent.x + layoutCoordinates.size.width,
                         positionInParent.y + layoutCoordinates.size.height
                     )
-                    if (zoomState.childRect != childRect) {
-                        mutableZoomState.value = zoomState.copy(
+                    if (immutableZoomState.childRect != childRect) {
+                        zoomState.value = immutableZoomState.copy(
                             childRect = childRect
                         )
                     }
             }) {
-                content(zoomState)
+                content(immutableZoomState)
             }
         }
     )
