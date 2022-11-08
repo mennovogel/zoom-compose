@@ -18,7 +18,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.mennovogel:zoom-compose:${imagin.version}'
+    implementation 'com.github.mennovogel:zoom-compose:${zoom-compose.version}'
 }
 ```
 
@@ -56,7 +56,7 @@ Zoomable(
          onTap(asset)
       }
    ),
-   // Use another onCancelledBehavior then the default KeepWithinBoundsOnCancelledBehavior.
+   // Use another onCancelledBehavior than the default KeepWithinBoundsOnCancelledBehavior.
    transformGestureHandler = TransformGestureHandler(
       // ResetToOriginalPositionOnCancelledBehavior always resets to the original position after 
       // the composable has been touched.
