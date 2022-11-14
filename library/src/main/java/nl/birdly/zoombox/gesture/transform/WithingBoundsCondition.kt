@@ -22,8 +22,7 @@ class WithingBoundsCondition : TouchCondition {
         )
         zoomState.offset.x
 
-        val returnValue = pointerEvent.changes.size > 1 ||
+        return pointerEvent.changes.size > 1 ||
                 zoomState.offset.x + translationX in 0.0..maxTranslationX.toDouble()
-        return returnValue
     }
 }
