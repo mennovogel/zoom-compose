@@ -70,20 +70,22 @@ fun Zoomable(
                     zoomState.value = newZoom
                 }
             }
-            .onGloballyPositioned { layoutCoordinates ->
-                val positionInParent = layoutCoordinates.positionInParent()
-                val childRect = Rect(
-                    positionInParent.x,
-                    positionInParent.y,
-                    positionInParent.x + layoutCoordinates.size.width,
-                    positionInParent.y + layoutCoordinates.size.height
-                )
-                if (immutableZoomState.childRect != childRect) {
-                    zoomState.value = immutableZoomState.copy(
-                        childRect = childRect
-                    )
-                }
-            },
+            .then(
+                if (immutableZoomState.childRect == null) {
+                    Modifier.onGloballyPositioned { layoutCoordinates ->
+                        val positionInParent = layoutCoordinates.positionInParent()
+                        val childRect = Rect(
+                            positionInParent.x,
+                            positionInParent.y,
+                            positionInParent.x + layoutCoordinates.size.width,
+                            positionInParent.y + layoutCoordinates.size.height
+                        )
+                        zoomState.value = immutableZoomState.copy(
+                            childRect = childRect
+                        )
+                    }
+                } else Modifier
+            ),
         content = {
             Box(Modifier
                 .align(Alignment.Center)

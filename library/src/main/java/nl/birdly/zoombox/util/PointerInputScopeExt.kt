@@ -11,7 +11,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.changedToUp
-import androidx.compose.ui.input.pointer.positionChangeConsumed
 import androidx.compose.ui.input.pointer.positionChanged
 import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.gesture.transform.TouchCondition
@@ -37,7 +36,7 @@ suspend fun PointerInputScope.detectTransformGestures(
             do {
                 val event: PointerEvent = awaitPointerEvent()
 
-                val canceled = event.changes.any { it.positionChangeConsumed() }
+                val canceled = event.changes.any { it.isConsumed }
 
                 if (event.changes.size == 1 && event.changes.any { it.changedToUp() }) onCancelled()
 
@@ -78,7 +77,7 @@ suspend fun PointerInputScope.detectTransformGestures(
                         }
                     }
                 }
-            } while (!canceled && event.changes.any { it.pressed })
+            } while (!canceled)
         }
     }
 }
