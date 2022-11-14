@@ -5,7 +5,7 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.Calculator
 
-class WithingBoundsCondition : TouchCondition {
+class WithinBoundsTouchCondition : TouchCondition {
 
     override fun invoke(
         zoomStateProvider: () -> ZoomState,

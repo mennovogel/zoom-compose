@@ -20,6 +20,14 @@ class KeepWithinBoundsOnCancelledBehavior : OnCancelledBehavior {
         zoomState: ZoomState,
         onZoomUpdated: (ZoomState) -> Unit
     ) {
+        val maxTranslationX = Calculator.calculateMaxTranslation(
+            zoomState.scale,
+            pointerInputScope.size.width
+        )
+
+        val isWithinBounds = zoomState.offset.x in 0.0..maxTranslationX.toDouble()
+        if (isWithinBounds) return
+
         scope.launch {
             val translationXWithinBounds = Calculator.keepTranslationWithinBounds(
                 -zoomState.offset.x,

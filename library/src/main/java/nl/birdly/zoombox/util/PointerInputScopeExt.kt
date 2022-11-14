@@ -11,7 +11,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.changedToUp
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.positionChangeConsumed
 import androidx.compose.ui.input.pointer.positionChanged
 import nl.birdly.zoombox.ZoomState
@@ -22,10 +21,9 @@ import kotlin.math.abs
 suspend fun PointerInputScope.detectTransformGestures(
     zoomStateProvider: () -> ZoomState,
     pointerInputScope: PointerInputScope,
-    panZoomLock: Boolean = false,
     onCancelled: () -> Unit = {},
     onCondition: TouchCondition,
-    onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit
+    onGesture: (centroid: Offset, pan: Offset, zoom: Float) -> Unit
 ) {
     forEachGesture {
         awaitPointerEventScope {
@@ -34,7 +32,6 @@ suspend fun PointerInputScope.detectTransformGestures(
             var pan = Offset.Zero
             var pastTouchSlop = false
             val touchSlop = viewConfiguration.touchSlop
-            var lockedToPanZoom = false
 
             awaitFirstDown(requireUnconsumed = false)
             do {
@@ -64,22 +61,19 @@ suspend fun PointerInputScope.detectTransformGestures(
                             panMotion > touchSlop
                         ) {
                             pastTouchSlop = true
-                            lockedToPanZoom = panZoomLock && rotationMotion < touchSlop
                         }
                     }
 
                     if (pastTouchSlop) {
                         val centroid = event.calculateCentroid(useCurrent = false)
-                        val effectiveRotation = if (lockedToPanZoom) 0f else rotationChange
-                        if (effectiveRotation != 0f ||
-                            zoomChange != 1f ||
+                        if (zoomChange != 1f ||
                             panChange != Offset.Zero
                         ) {
-                            onGesture(centroid, panChange, zoomChange, effectiveRotation)
+                            onGesture(centroid, panChange, zoomChange)
                         }
                         event.changes.forEach {
                             if (it.positionChanged()) {
-                                it.consumeAllChanges()
+                                it.consume()
                             }
                         }
                     }

@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
-import nl.birdly.zoombox.gesture.transform.WithingBoundsCondition
+import nl.birdly.zoombox.gesture.transform.WithinBoundsTouchCondition
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -43,7 +43,7 @@ fun ImageScreen(index: Int, viewModel: ImageViewModel = ImageViewModel()) {
 
                 Zoomable(
                     transformGestureHandler = TransformGestureHandler(
-                        onCondition = WithingBoundsCondition()
+                        onCondition = WithinBoundsTouchCondition()
                     ),
                 ) {
                     val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(image.location)
