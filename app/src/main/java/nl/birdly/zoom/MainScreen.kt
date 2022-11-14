@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import nl.birdly.zoom.ui.theme.ZoomTheme
@@ -32,7 +33,7 @@ import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoombox.rememberMutableZoomState
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, viewModel: ImageViewModel = ImageViewModel()){
     ZoomTheme {
         Surface(
             modifier = Modifier
@@ -43,21 +44,18 @@ fun MainScreen(navController: NavHostController) {
                     .verticalScroll(rememberScrollState())
                     .background(MaterialTheme.colors.background)
             ) {
-                val onTap = { asset: String ->
-                    navController.navigate("image/$asset")
+                viewModel.images.forEachIndexed { index, image ->
+                    ImageRow(contentDescription = image.name, asset = image.location) {
+                        navController.navigate("image/$index")
+                    }
                 }
-
-                ImageRow(contentDescription = "Highlander", asset = "Highlander.jpg", onTap)
-                ImageRow(contentDescription = "Lizard", asset = "Lizard.jpg", onTap)
-                ImageRow(contentDescription = "Dolphin", asset = "Dolphin.jpg", onTap)
-                ImageRow(contentDescription = "Shanghai", asset = "Shanghai.jpg", onTap)
             }
         }
     }
 }
 
 @Composable
-fun ImageRow(contentDescription: String, asset: String, onTap: (String) -> Unit) {
+fun ImageRow(contentDescription: String, asset: String, onTap: () -> Unit) {
     Text(
         text = contentDescription,
         style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
@@ -76,7 +74,7 @@ fun ImageRow(contentDescription: String, asset: String, onTap: (String) -> Unit)
         tapHandler = TapHandler(
             onDoubleTap = null,
             onTap = {
-                onTap(asset)
+                onTap()
             }
         ),
         transformGestureHandler = TransformGestureHandler(

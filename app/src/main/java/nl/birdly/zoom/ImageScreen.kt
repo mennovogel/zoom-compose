@@ -7,26 +7,52 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
+import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
+import nl.birdly.zoombox.gesture.transform.WithingBoundsCondition
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ImageScreen(asset: String) {
+fun ImageScreen(index: Int, viewModel: ImageViewModel = ImageViewModel()) {
+
     ZoomTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(asset).asImageBitmap()
-            Zoomable {
-                Image(
-                    bitmap,
-                    asset,
-                )
+            val pagerState = rememberPagerState()
+
+            LaunchedEffect(index) {
+                launch {
+                    pagerState.scrollToPage(index)
+                }
+            }
+
+            HorizontalPager(viewModel.images.size, state = pagerState) {
+                val image = viewModel.images[it]
+
+                Zoomable(
+                    transformGestureHandler = TransformGestureHandler(
+                        onCondition = WithingBoundsCondition()
+                    ),
+                ) {
+                    val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(image.location)
+                        .asImageBitmap()
+                    Image(
+                        bitmap,
+                        image.name,
+                    )
+                }
             }
         }
     }
@@ -42,6 +68,6 @@ private fun Context.assetsToBitmap(fileName: String): Bitmap {
 @Composable
 private fun MainScreenPreview() {
     ZoomTheme {
-        ImageScreen("Dolphin.jpg")
+        ImageScreen(0)
     }
 }

@@ -14,13 +14,17 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.positionChangeConsumed
 import androidx.compose.ui.input.pointer.positionChanged
+import nl.birdly.zoombox.ZoomState
+import nl.birdly.zoombox.gesture.transform.TouchCondition
 import kotlin.math.PI
 import kotlin.math.abs
 
 suspend fun PointerInputScope.detectTransformGestures(
+    zoomStateProvider: () -> ZoomState,
+    pointerInputScope: PointerInputScope,
     panZoomLock: Boolean = false,
     onCancelled: () -> Unit = {},
-    onCondition: (pointerEvent: PointerEvent) -> Boolean,
+    onCondition: TouchCondition,
     onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit
 ) {
     forEachGesture {
@@ -40,7 +44,7 @@ suspend fun PointerInputScope.detectTransformGestures(
 
                 if (event.changes.size == 1 && event.changes.any { it.changedToUp() }) onCancelled()
 
-                if (!canceled && onCondition(event)) {
+                if (!canceled && onCondition(zoomStateProvider, pointerInputScope, event)) {
                     val zoomChange = event.calculateZoom()
                     val rotationChange = event.calculateRotation()
                     val panChange = event.calculatePan()

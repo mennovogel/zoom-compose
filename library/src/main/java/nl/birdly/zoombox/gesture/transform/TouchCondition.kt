@@ -4,12 +4,11 @@ import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import nl.birdly.zoombox.ZoomState
 
-class OnDoubleTouchCondition : TouchCondition {
+interface TouchCondition {
 
-    override fun invoke(
+    operator fun invoke(
         zoomStateProvider: () -> ZoomState,
         pointerInputScope: PointerInputScope,
         pointerEvent: PointerEvent
-    ) = pointerEvent.changes.size > 1
-
+    ): Boolean
 }
