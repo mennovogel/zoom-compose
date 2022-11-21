@@ -78,7 +78,7 @@ Zoomable(
 ```
 
 Using a HorizontalPager? Then use WithinXBoundsTouchCondition to combine paging and zooming
-```
+```kotlin
 val pagerState = rememberPagerState()
 
 VerticalPager(viewModel.images.size, state = pagerState) {
