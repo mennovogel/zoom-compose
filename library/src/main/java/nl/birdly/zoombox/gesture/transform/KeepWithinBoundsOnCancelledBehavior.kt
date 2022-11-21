@@ -2,7 +2,6 @@ package nl.birdly.zoombox.gesture.transform
 
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -16,7 +15,6 @@ class KeepWithinBoundsOnCancelledBehavior : OnCancelledBehavior {
         scope: CoroutineScope,
         state: TransformableState,
         pointerInputScope: PointerInputScope,
-        childImageBounds: Rect,
         zoomState: ZoomState,
         onZoomUpdated: (ZoomState) -> Unit
     ) {
@@ -24,22 +22,29 @@ class KeepWithinBoundsOnCancelledBehavior : OnCancelledBehavior {
             zoomState.scale,
             pointerInputScope.size.width
         )
+        val maxTranslationY = Calculator.calculateMaxTranslation(
+            zoomState.scale,
+            pointerInputScope.size.height
+        )
 
-        val isWithinBounds = zoomState.offset.x in 0.0..maxTranslationX.toDouble()
-        if (isWithinBounds) return
+        val isWithinXBounds = zoomState.offset.x in 0.0..maxTranslationX.toDouble()
+        val isWithinYBounds = zoomState.offset.y in 0.0..maxTranslationY.toDouble()
+        if (isWithinXBounds && isWithinYBounds) return
+
+        zoomState.childRect ?: return
 
         scope.launch {
             val translationXWithinBounds = Calculator.keepTranslationWithinBounds(
                 -zoomState.offset.x,
                 zoomState.scale,
                 pointerInputScope.size.width,
-                childImageBounds.width.toInt()
+                zoomState.childRect.width.toInt()
             )
             val translationYWithinBounds = Calculator.keepTranslationWithinBounds(
                 -zoomState.offset.y,
                 zoomState.scale,
                 pointerInputScope.size.height,
-                childImageBounds.height.toInt()
+                zoomState.childRect.height.toInt()
             )
 
             state.animateZoomBy(
