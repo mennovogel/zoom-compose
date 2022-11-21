@@ -7,16 +7,18 @@ supports both zooming inside lists as zooming on a separate screen.
 
 ## Usage
 
-1. Add the Zoom library to your `build.gradle` file:
+1. Add the Zoom library to your project:
+
+Add Jitpack to your repositories, in your top-level `build.gradle` or `settings.gradle` file:
 
 ```gradle
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
+repositories {
+    ...
+    maven { url 'https://jitpack.io' }
 }
-
+```
+Then add the library to your dependencies in your app-level `build.gradle` file:
+```gradle
 dependencies {
     implementation 'com.github.mennovogel:zoom-compose:${zoom-compose.version}'
 }
