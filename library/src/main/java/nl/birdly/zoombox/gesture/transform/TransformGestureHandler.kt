@@ -5,6 +5,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputScope
 import kotlinx.coroutines.CoroutineScope
 import nl.birdly.zoombox.ZoomState
+import nl.birdly.zoombox.gesture.condition.AnyTouchCondition
+import nl.birdly.zoombox.gesture.condition.TouchCondition
 import nl.birdly.zoombox.util.detectTransformGestures
 
 class TransformGestureHandler(

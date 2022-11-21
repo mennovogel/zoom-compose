@@ -14,13 +14,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
-import nl.birdly.zoombox.gesture.transform.WithinBoundsTouchCondition
+import nl.birdly.zoombox.gesture.condition.WithinXBoundsTouchCondition
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -38,12 +38,12 @@ fun ImageScreen(index: Int, viewModel: ImageViewModel = ImageViewModel()) {
                 }
             }
 
-            HorizontalPager(viewModel.images.size, state = pagerState) {
+            VerticalPager(viewModel.images.size, state = pagerState) {
                 val image = viewModel.images[it]
 
                 Zoomable(
                     transformGestureHandler = TransformGestureHandler(
-                        onCondition = WithinBoundsTouchCondition()
+                        onCondition = WithinXBoundsTouchCondition()
                     ),
                 ) {
                     val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(image.location)

@@ -1,11 +1,11 @@
-package nl.birdly.zoombox.gesture.transform
+package nl.birdly.zoombox.gesture.condition
 
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import nl.birdly.zoombox.ZoomState
 import nl.birdly.zoombox.util.Calculator
 
-class WithinBoundsTouchCondition : TouchCondition {
+class WithinYBoundsTouchCondition : TouchCondition {
 
     override fun invoke(
         zoomStateProvider: () -> ZoomState,
@@ -14,15 +14,15 @@ class WithinBoundsTouchCondition : TouchCondition {
     ): Boolean {
         val zoomState = zoomStateProvider()
 
-        val translationX = pointerEvent.changes.first().previousPosition.x -
-                pointerEvent.changes.first().position.x
-        val maxTranslationX = Calculator.calculateMaxTranslation(
+        val translationY = pointerEvent.changes.first().previousPosition.y -
+                pointerEvent.changes.first().position.y
+        val maxTranslationY = Calculator.calculateMaxTranslation(
             zoomState.scale,
-            pointerInputScope.size.width
+            pointerInputScope.size.height
         )
-        zoomState.offset.x
+        zoomState.offset.y
 
         return pointerEvent.changes.size > 1 ||
-                zoomState.offset.x + translationX in 0.0..maxTranslationX.toDouble()
+                zoomState.offset.y + translationY in 0.0..maxTranslationY.toDouble()
     }
 }

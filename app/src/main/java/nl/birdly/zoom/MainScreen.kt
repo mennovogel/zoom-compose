@@ -26,7 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import nl.birdly.zoom.ui.theme.ZoomTheme
 import nl.birdly.zoombox.Zoomable
 import nl.birdly.zoombox.gesture.tap.TapHandler
-import nl.birdly.zoombox.gesture.transform.OnDoubleTouchCondition
+import nl.birdly.zoombox.gesture.condition.OnDoubleTouchCondition
 import nl.birdly.zoombox.gesture.transform.ResetToOriginalPositionOnCancelledBehavior
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoombox.rememberMutableZoomState

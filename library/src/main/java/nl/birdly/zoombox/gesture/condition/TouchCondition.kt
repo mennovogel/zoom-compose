@@ -1,14 +1,14 @@
-package nl.birdly.zoombox.gesture.transform
+package nl.birdly.zoombox.gesture.condition
 
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputScope
 import nl.birdly.zoombox.ZoomState
 
-class AnyTouchCondition : TouchCondition {
+interface TouchCondition {
 
-    override fun invoke(
+    operator fun invoke(
         zoomStateProvider: () -> ZoomState,
         pointerInputScope: PointerInputScope,
         pointerEvent: PointerEvent
-    ): Boolean = true
+    ): Boolean
 }

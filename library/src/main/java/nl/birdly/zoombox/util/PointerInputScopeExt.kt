@@ -13,7 +13,7 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.positionChanged
 import nl.birdly.zoombox.ZoomState
-import nl.birdly.zoombox.gesture.transform.TouchCondition
+import nl.birdly.zoombox.gesture.condition.TouchCondition
 import kotlin.math.PI
 import kotlin.math.abs
 
