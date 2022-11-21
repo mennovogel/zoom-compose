@@ -14,18 +14,17 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.VerticalPager
+import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import nl.birdly.zoom.ui.theme.ZoomTheme
-import nl.birdly.zoombox.Zoomable
-import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoombox.gesture.condition.WithinXBoundsTouchCondition
+import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
+import nl.birdly.zoombox.zoomable
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ImageScreen(index: Int, viewModel: ImageViewModel = ImageViewModel()) {
-
     ZoomTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -38,21 +37,21 @@ fun ImageScreen(index: Int, viewModel: ImageViewModel = ImageViewModel()) {
                 }
             }
 
-            VerticalPager(viewModel.images.size, state = pagerState) {
+            HorizontalPager(viewModel.images.size, state = pagerState) {
                 val image = viewModel.images[it]
 
-                Zoomable(
-                    transformGestureHandler = TransformGestureHandler(
-                        onCondition = WithinXBoundsTouchCondition()
-                    ),
-                ) {
-                    val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(image.location)
-                        .asImageBitmap()
-                    Image(
-                        bitmap,
-                        image.name,
+                val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(image.location)
+                    .asImageBitmap()
+
+                Image(
+                    bitmap,
+                    image.name,
+                    Modifier.zoomable(
+                        transformGestureHandler = TransformGestureHandler(
+                            onCondition = WithinXBoundsTouchCondition()
+                        )
                     )
-                }
+                )
             }
         }
     }

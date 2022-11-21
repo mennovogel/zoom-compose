@@ -24,12 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import nl.birdly.zoom.ui.theme.ZoomTheme
-import nl.birdly.zoombox.Zoomable
-import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.condition.OnDoubleTouchCondition
+import nl.birdly.zoombox.gesture.tap.TapHandler
 import nl.birdly.zoombox.gesture.transform.ResetToOriginalPositionOnCancelledBehavior
 import nl.birdly.zoombox.gesture.transform.TransformGestureHandler
 import nl.birdly.zoombox.rememberMutableZoomState
+import nl.birdly.zoombox.zoomable
 
 @Composable
 fun MainScreen(navController: NavHostController, viewModel: ImageViewModel = ImageViewModel()){
@@ -67,26 +67,26 @@ fun ImageRow(contentDescription: String, asset: String, onTap: () -> Unit) {
 
     val zoomState = rememberMutableZoomState()
     zoomState.value.scale
-    Zoomable(
-        zoomState = zoomState,
-        zoomRange = 0.8f..3f,
-        tapHandler = TapHandler(
-            onDoubleTap = null,
-            onTap = {
-                onTap()
-            }
-        ),
-        transformGestureHandler = TransformGestureHandler(
-            onCancelledBehavior = ResetToOriginalPositionOnCancelledBehavior(),
-            onCondition = OnDoubleTouchCondition()
-        )
+    Card(
+        Modifier
+            .padding(8.dp)
+            .zoomable(
+                zoomState,
+                zoomRange = 0.8f..3f,
+                tapHandler = TapHandler(
+                    onDoubleTap = null,
+                    onTap = {
+                        onTap()
+                    }
+                ),
+                transformGestureHandler = TransformGestureHandler(
+                    onCancelledBehavior = ResetToOriginalPositionOnCancelledBehavior(),
+                    onCondition = OnDoubleTouchCondition()
+                )
+            ),
+        elevation = (zoomState.value.scale * 10f).dp
     ) {
-        Card(
-            Modifier.padding(8.dp),
-            elevation = (it.scale * 10f).dp
-        ) {
-            Image(bitmap, contentDescription)
-        }
+        Image(bitmap, contentDescription)
     }
 }
 

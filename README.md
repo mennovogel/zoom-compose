@@ -29,12 +29,11 @@ dependencies {
    Basic usage: 
 
 ```kotlin
-Zoomable {
-   Image(
-      bitmap,
-      contentDescription,
-   )
-}
+Image(
+   bitmap,
+   contentDescription,
+   Modifier.zoomable()
+)
 ```
 
 This will make your image, or any composable zoomable with all the defaults. You can now pinch 
@@ -47,35 +46,35 @@ The image will be centered automatically.
 // This enables you to observe changes, like zoomState.value.scale. 
 val zoomState = rememberMutableZoomState()
 
-Zoomable(
-   zoomState = zoomState,
-   // Provide your preferred zoomRange.
-   zoomRange = 0.8f..3f,
-   // Add tap or double tap handlers.
-   tapHandler = TapHandler(
-      onDoubleTap = null,
-      onTap = {
-         onTap(asset)
-      }
-   ),
-   // Use another onCancelledBehavior than the default KeepWithinBoundsOnCancelledBehavior.
-   transformGestureHandler = TransformGestureHandler(
-      // ResetToOriginalPositionOnCancelledBehavior always resets to the original position after 
-      // the composable has been touched.
-      onCancelledBehavior = ResetToOriginalPositionOnCancelledBehavior(),
-      // OnDoubleTouchCondition makes sure the composable is only transformed with double touch 
-      // gestures. This makes sense when used inside a list. 
-      onCondition = OnDoubleTouchCondition()
-   )
+Card(
+   Modifier
+      .padding(8.dp)
+      .zoomable(
+         zoomState = zoomState,
+         // Provide your preferred zoomRange.
+         zoomRange = 0.8f..3f,
+         // Add tap or double tap handlers.
+         tapHandler = TapHandler(
+            onDoubleTap = null,
+            onTap = {
+               onTap(asset)
+            }
+         ),
+         // Use another onCancelledBehavior than the default KeepWithinBoundsOnCancelledBehavior.
+         transformGestureHandler = TransformGestureHandler(
+            // ResetToOriginalPositionOnCancelledBehavior always resets to the original position after 
+            // the composable has been touched.
+            onCancelledBehavior = ResetToOriginalPositionOnCancelledBehavior(),
+            // OnDoubleTouchCondition makes sure the composable is only transformed with double touch 
+            // gestures. This makes sense when used inside a list. 
+            onCondition = OnDoubleTouchCondition()
+         )
+      )
+   ,
+   // You can easily use the scale for example.
+   elevation = (zoomState.value.scale * 10f).dp
 ) {
-   // Any composable can be transformed, but only one child is supported.
-   Card(
-      Modifier.padding(8.dp),
-      // within the Zoomable scope you can easily use the scale for example.
-      elevation = (it.scale * 10f).dp
-   ) {
-      Image(bitmap, contentDescription)
-   }
+   Image(bitmap, contentDescription)
 }
 ```
 
@@ -86,16 +85,16 @@ val pagerState = rememberPagerState()
 VerticalPager(viewModel.images.size, state = pagerState) {
     val image = viewModel.images[it]
 
-    Zoomable(
-        transformGestureHandler = TransformGestureHandler(
+   Image(
+      bitmap,
+      image.name,
+      Modifier.zoomable(
+         transformGestureHandler = TransformGestureHandler(
             // This stops zooming when zoomed out of bounds to allow paging
             onCondition = WithinXBoundsTouchCondition()
-        ),
-    ) {
-        val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(image.location)
-            .asImageBitmap()
-        Image(bitmap, image.name)
-    }
+         )
+      )
+   )
 }
 ```
 
