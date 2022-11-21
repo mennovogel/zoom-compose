@@ -77,6 +77,26 @@ Zoomable(
 }
 ```
 
+Using a HorizontalPager? Then use WithinXBoundsTouchCondition to combine paging and zooming
+```
+val pagerState = rememberPagerState()
+
+VerticalPager(viewModel.images.size, state = pagerState) {
+    val image = viewModel.images[it]
+
+    Zoomable(
+        transformGestureHandler = TransformGestureHandler(
+            // This stops zooming when zoomed out of bounds to allow paging
+            onCondition = WithinXBoundsTouchCondition()
+        ),
+    ) {
+        val bitmap: ImageBitmap = LocalContext.current.assetsToBitmap(image.location)
+            .asImageBitmap()
+        Image(bitmap, image.name)
+    }
+}
+```
+
 ## Licence
 
 Zoom Compose is available under the MIT license.
