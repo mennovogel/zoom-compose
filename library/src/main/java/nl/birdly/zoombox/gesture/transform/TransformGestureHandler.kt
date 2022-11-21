@@ -21,8 +21,6 @@ class TransformGestureHandler(
         zoomStateProvider: () -> ZoomState,
         onZoomUpdated: (ZoomState) -> Unit
     ) {
-        val zoom = zoomStateProvider()
-        zoom.childRect ?: return
         pointerInputScope.detectTransformGestures(
             zoomStateProvider,
             pointerInputScope,
@@ -31,7 +29,6 @@ class TransformGestureHandler(
                     scope,
                     state,
                     pointerInputScope,
-                    zoom.childRect,
                     zoomStateProvider(),
                     onZoomUpdated
                 )
