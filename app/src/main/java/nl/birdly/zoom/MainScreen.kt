@@ -6,8 +6,13 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
@@ -32,7 +37,7 @@ import nl.birdly.zoombox.rememberMutableZoomState
 import nl.birdly.zoombox.zoomable
 
 @Composable
-fun MainScreen(navController: NavHostController, viewModel: ImageViewModel = ImageViewModel()){
+fun MainScreen(navController: NavHostController, viewModel: ImageViewModel = ImageViewModel()) {
     ZoomTheme {
         Surface(
             modifier = Modifier
@@ -42,6 +47,7 @@ fun MainScreen(navController: NavHostController, viewModel: ImageViewModel = Ima
                 Modifier
                     .verticalScroll(rememberScrollState())
                     .background(MaterialTheme.colors.background)
+                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Vertical))
             ) {
                 viewModel.images.forEachIndexed { index, image ->
                     ImageRow(contentDescription = image.name, asset = image.location) {
@@ -91,9 +97,9 @@ fun ImageRow(contentDescription: String, asset: String, onTap: () -> Unit) {
 }
 
 private fun Context.assetsToBitmap(fileName: String): Bitmap {
-    return with(assets.open(fileName)){
-            BitmapFactory.decodeStream(this)
-        }
+    return with(assets.open(fileName)) {
+        BitmapFactory.decodeStream(this)
+    }
 }
 
 @Preview

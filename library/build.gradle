@@ -1,14 +1,17 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
-    compileSdk 32
+    namespace = "nl.birdly.zoombox"
+
+    compileSdk 36
 
     defaultConfig {
         minSdk 23
-        targetSdk 32
+        targetSdk 36
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -30,12 +33,10 @@ android {
     buildFeatures {
         compose true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-    }
 }
 
 dependencies {
-    implementation 'androidx.compose.foundation:foundation:1.2.1'
+    implementation(platform("androidx.compose:compose-bom:2025.11.00"))
+    implementation 'androidx.compose.foundation:foundation'
     testImplementation 'junit:junit:4.13.2'
 }
